@@ -3,7 +3,7 @@ from functools import total_ordering
 from datetime import datetime
 
 
-@dataclass
+@dataclass(slots=True)
 @total_ordering
 class Event:
     action: str
