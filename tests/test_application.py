@@ -1,4 +1,6 @@
 from tracker.application import Application
+from tracker.event import Event
+import datetime
 import pytest
 
 
@@ -37,3 +39,13 @@ def test_status_assignment():
     with pytest.raises(ValueError) as excinfo:
         application1.status = "Testing"
     assert str(excinfo.value) == "This isn't a valid status"
+
+
+def test_history_append():
+    date1 = datetime.datetime(2020, 5, 17)
+    event1 = Event("test1", False, date1)
+    date2 = datetime.datetime(2020, 5, 21)
+    event2 = Event("test2", True, date2)
+    application1.application_history = [event1]
+    application1.add_history(event2)
+    assert application1.application_history == [event2, event1]
