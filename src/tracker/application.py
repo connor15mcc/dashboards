@@ -20,10 +20,15 @@ class Application:
         self.position = pos
 
     def __repr__(self) -> str:
-        return f"Application({self.application_id=}, {self.company_name=}, {self.position=})" #type: ignore
+        return (
+            f"Application({self.application_id}, {self.company_name}, {self.position})"
+        )  # type: ignore
 
     def __str__(self) -> str:
-        return f"Application#{self.application_id} at {self.company_name} for the {self.position} position"
+        return (
+            f"Application #{self.application_id} "
+            f"at {self.company_name} for the {self.position} position"
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, Application):
