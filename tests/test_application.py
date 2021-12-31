@@ -39,6 +39,8 @@ def test_status_assignment():
     with pytest.raises(ValueError) as excinfo:
         application1.status = "Testing"
     assert str(excinfo.value) == "This isn't a valid status"
+    application1.accept()
+    assert application1.status == "Accepted"
 
 
 def test_history_append():
