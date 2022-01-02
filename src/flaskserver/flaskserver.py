@@ -15,12 +15,12 @@ loadedTrackers: List[Tracker] = tracker.main.unpickle_trackers(
 
 @app.route("/")
 def homepage():
-    return redirect("/trackers/")
+    return redirect(url_for("trackers"))
 
 
 @app.route("/trackers/")
 def trackers():
-    return render_template("trackers.html", trackers=loadedTrackers)
+    return render_template("trackers.html", title="Trackers", trackers=loadedTrackers)
 
 
 @app.route("/trackers/<tracker_name>/")
@@ -31,7 +31,9 @@ def tracker(tracker_name):
             "error.html", msg="Sorry, no trackers exist with this name."
         )
     elif len(correctTrackers) == 1:
-        return render_template("tracker.html", tracker=correctTrackers[0])
+        return render_template(
+            "tracker.html", title=tracker_name, tracker=correctTrackers[0]
+        )
     else:
         return render_template(
             "error.html",
