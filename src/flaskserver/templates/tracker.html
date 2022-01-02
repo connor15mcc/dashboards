@@ -1,0 +1,20 @@
+<p>Name: {{tracker.name}}</p>
+<p>Description: {{tracker.desc}}</p>
+<table id="data" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Application ID</th>
+            <th>Company Name</th>
+            <th>Position</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for app in tracker.applications %}
+        <tr>
+            <td>{{ app.application_id }}</td>
+            <td>{{ app.company_name }}</td>
+            <td>{{ app.position }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
