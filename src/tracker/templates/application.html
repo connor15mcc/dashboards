@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<h4>Company: {{application.company_name}}</h4>
+<h4>Position: {{application.position_name}}</h4>
+<br>
+<table id="data" class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th>Event ID</th>
+            <th>Event Description</th>
+            <th>From me?</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in application.event_history %}
+        <tr>
+            <td>{{ event.event_id }}</td>
+            <td>{{ event.desc }}</td>
+            <td>{{ event.from_me }}</td>
+            <td>{{ event.date}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

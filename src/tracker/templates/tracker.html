@@ -1,13 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
-<p>Name: {{tracker.name}}</p>
-<p>Description: {{tracker.desc}}</p>
-<table id="data" class="table table-striped">
+<h4>Name: {{tracker.name}}</h4>
+<h4>Description: {{tracker.desc}}</h4>
+<br>
+<table id="data" class="table table-sm table-hover">
     <thead>
         <tr>
             <th>Application ID</th>
             <th>Company Name</th>
             <th>Position</th>
+            <th>History</th>
         </tr>
     </thead>
     <tbody>
@@ -16,6 +18,7 @@
             <td>{{ app.application_id }}</td>
             <td>{{ app.company_name }}</td>
             <td>{{ app.position_name }}</td>
+            <td><a class="btn btn-primary" href="{{ app.application_id }}">View History</a></td>
         </tr>
         {% endfor %}
     </tbody>

@@ -23,8 +23,10 @@ class Application(db.Model):
     event_history = db.relationship("Event", backref="application", lazy=True)
 
     def __repr__(self):
-        return f"Application('{self.application_id}', '{self.company_name}', "
-        f"'{self.position_name}'"
+        return (
+            f"Application('{self.application_id}', '{self.company_name}', "
+            f"'{self.position_name}'"
+        )
 
 
 class Event(db.Model):
