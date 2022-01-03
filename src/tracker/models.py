@@ -13,7 +13,7 @@ class Tracker(db.Model):
 
 
 class Application(db.Model):
-    application_id = db.Column(db.Integer, primary_key=True)
+    application_id = db.Column(db.String, primary_key=True)
     company_name = db.Column(db.String, nullable=False)
     position_name = db.Column(db.String, nullable=False)
     source = db.Column(db.String)
@@ -30,7 +30,7 @@ class Application(db.Model):
 
 
 class Event(db.Model):
-    event_id = db.Column(db.Integer, primary_key=True)
+    event_id = db.Column(db.String, primary_key=True)
     desc = db.Column(db.String, nullable=False)
     from_me = db.Column(db.Boolean, nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

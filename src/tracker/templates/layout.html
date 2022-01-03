@@ -21,20 +21,21 @@
 
 <body>
     <div class="content">
-
         <nav class="bg-dark" aria-label="breadcrumb">
-            <ol class="breadcrumb bg-dark">
-                {% for breadcrumb in breadcrumbs %}
-                {% if not loop.last %}
-                <li class="breadcrumb-item"><a class="text-light" href="{{ breadcrumb.url }}">{{ breadcrumb.text
-                        }}</a></li>
-                {% else %}
-                <li class=" breadcrumb-item active" aria-current="{{ breadcrumb.url }}"><a class="text-light"
-                        href="{{breadcrumb.url}}">{{
-                        breadcrumb.text }}</a></li>
-                {% endif %}
-                {% endfor %}
-            </ol>
+            <div style=height:2%;>
+                <ol class="breadcrumb bg-dark">
+                    {% for breadcrumb in breadcrumbs %}
+                    {% if not loop.last %}
+                    <li class="breadcrumb-item"><a class="text-light" href="{{ breadcrumb.url }}">{{ breadcrumb.text
+                            }}</a></li>
+                    {% else %}
+                    <li class=" breadcrumb-item active" aria-current="{{ breadcrumb.url }}"><a class="text-light"
+                            href="{{breadcrumb.url}}">{{
+                            breadcrumb.text }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                </ol>
+            </div>
         </nav>
 
         <main class="container">

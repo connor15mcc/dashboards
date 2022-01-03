@@ -1,26 +1,37 @@
 {% extends "layout.html" %}
 {% block content %}
-<h4>Name: {{tracker.name}}</h4>
-<h4>Description: {{tracker.desc}}</h4>
+<div class=row>
+    <div class="col">
+        <h5><b>Name:</b> {{tracker.name}}
+            <br><b>Description:</b> {{tracker.desc}}
+        </h5>
+    </div>
+    <div class="col-3 align-self-center">
+        <a class="btn btn-success" href="{{ url_for('addNewApplication', tracker_name = tracker.name_id) }}">Add New
+            Application</a>
+    </div>
+</div>
 <br>
-<table id="data" class="table table-sm table-hover">
-    <thead>
-        <tr>
-            <th>Application ID</th>
-            <th>Company Name</th>
-            <th>Position</th>
-            <th>History</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for app in tracker.applications %}
-        <tr>
-            <td>{{ app.application_id }}</td>
-            <td>{{ app.company_name }}</td>
-            <td>{{ app.position_name }}</td>
-            <td><a class="btn btn-primary" href="{{ app.application_id }}">View History</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div>
+    <table id="data" class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Application ID</th>
+                <th>Company Name</th>
+                <th>Position</th>
+                <th>History</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in tracker.applications %}
+            <tr>
+                <td>{{ app.application_id }}</td>
+                <td>{{ app.company_name }}</td>
+                <td>{{ app.position_name }}</td>
+                <td><a class="btn btn-primary btn-sm" href="{{ app.application_id }}">View History</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock content %}

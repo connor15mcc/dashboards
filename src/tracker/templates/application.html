@@ -1,7 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
-<h4>Company: {{application.company_name}}</h4>
-<h4>Position: {{application.position_name}}</h4>
+<div class=row>
+    <div class="col">
+        <h5><b>Company:</b> {{application.company_name}}
+            <br><b>Position:</b> {{application.position_name}}
+        </h5>
+    </div>
+    <div class="col-3 align-self-center">
+        <a class="btn btn-success"
+            href="{{ url_for('addNewEvent', tracker_name = application.of_tracker, app_id = application.application_id) }}">Add
+            New
+            Event</a>
+    </div>
+</div>
 <br>
 <table id="data" class="table table-sm table-hover">
     <thead>
