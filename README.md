@@ -10,3 +10,6 @@ Following my recruitment for Summer '22 during the Fall of 2021 (my junior year)
 - Ability to gain insight/data on the progression of applications on a large scale and extract to visualizations
 - Ability to control via webpage
 - Ability to autogenerate cover letters
+
+## Tips
+- You should create a `.env` file with `SECRET_KEY=your_key_here`

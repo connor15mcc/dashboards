@@ -1,7 +1,8 @@
-from flask import request, redirect, url_for, render_template
+from flask import redirect, url_for, render_template, flash
 from flask_breadcrumbs import register_breadcrumb
 from tracker import app
 from tracker.models import Tracker, Application
+from tracker.forms import NewApplication, NewTracker, NewEvent
 
 
 @app.route("/")
@@ -39,19 +40,11 @@ def oneTracker(tracker_name):
         )
 
 
-def breadcrumb_for_oneApplication(*args, **kwargs):
-    app_id = request.view_args["app_id"]
-    app = Application.query.get(app_id)
-    print(f"{app.application_id=}")
-    return [{"text": app.company_name, "url": app.application_id}]
-
-
 @app.route("/trackers/<tracker_name>/<app_id>")
 @register_breadcrumb(
     app,
     ".tracker.application",
     "Application",
-    dynamic_list_constructor=breadcrumb_for_oneApplication,
 )
 def oneApplication(tracker_name, app_id):
     correctTracker = Tracker.query.filter_by(name_id=tracker_name).all()
@@ -77,19 +70,60 @@ def oneApplication(tracker_name, app_id):
     )
 
 
-@app.route("/trackers/add_new")
+@app.route("/trackers/add_new", methods=["GET", "POST"])
 @register_breadcrumb(app, ".add_new", "Add New Tracker")
 def addNewTracker():
-    return "add New Tracker"
+    form = NewTracker()
+    if form.validate_on_submit():
+        flash(f"New Tracker added for {form.name.data}!", "success")
+        return redirect(url_for("allTrackers"))
+    return render_template("new_tracker.html", title="New Tracker", form=form)
 
 
-@app.route("/trackers/<tracker_name>/add_new")
+@app.route("/trackers/<tracker_name>/add_new", methods=["GET", "POST"])
 @register_breadcrumb(app, ".tracker.add_new", "Add New Application")
 def addNewApplication(tracker_name):
-    return "add New Application"
+    form = NewApplication()
+    if form.validate_on_submit():
+        flash(f"New Application added for {form.company_name.data}!", "success")
+        return redirect(url_for("oneTracker", tracker_name=tracker_name))
+    return render_template("new_application.html", title="New Application", form=form)
 
 
-@app.route("/trackers/<tracker_name>/<app_id>/add_new")
+@app.route("/trackers/<tracker_name>/<app_id>/add_new", methods=["GET", "POST"])
 @register_breadcrumb(app, ".tracker.application.add_new", "Add New Event")
 def addNewEvent(tracker_name, app_id):
-    return "add New Event"
+    form = NewEvent()
+    if form.validate_on_submit():
+        flash(f"New Event added for {form.date.data:%B %d, %Y}!", "success")
+        return redirect(
+            url_for("oneApplication", tracker_name=tracker_name, app_id=app_id)
+        )
+    return render_template("new_event.html", title="New Appliction", form=form)
+
+
+@app.route("/trackers/<tracker_name>/edit")
+@register_breadcrumb(app, ".tracker.edit", "Edit Tracker")
+def editTracker(tracker_name):
+    return f"edit {tracker_name}"
+
+
+@app.route("/trackers/<tracker_name>/<app_id>/edit")
+@register_breadcrumb(app, ".tracker.application.edit", "Edit Application")
+def editApplication(tracker_name, app_id):
+    return f"edit {app_id}"
+
+
+@app.route("/tracker/<tracker_name>/<app_id>/<event_id>")
+@register_breadcrumb(app, ".tracker.application.event.edit", "Edit Event")
+def editEvent(tracker_name, app_id, event_id):
+    return f"edit {event_id}"
+
+
+# Formatting Datetimes in Jinja:
+@app.template_filter("formatdatetime")
+def format_datetime(value, format="%B %d, %Y"):
+    """Format a date time to (Default): Month Day, LongYear"""
+    if value is None:
+        return ""
+    return value.strftime(format).lstrip("0").replace(" 0", " ")

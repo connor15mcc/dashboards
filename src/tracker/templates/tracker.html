@@ -19,7 +19,8 @@
                 <th>Application ID</th>
                 <th>Company Name</th>
                 <th>Position</th>
-                <th>History</th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +30,7 @@
                 <td>{{ app.company_name }}</td>
                 <td>{{ app.position_name }}</td>
                 <td><a class="btn btn-primary btn-sm" href="{{ app.application_id }}">View History</a></td>
+                <td><a class="btn btn-danger btn-sm" href="{{ app.application_id }}/edit"> Edit </a></td>
             </tr>
             {% endfor %}
         </tbody>
