@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class=row>
+    <div class="col">
+        <h5>Use this site to easily keep track of job applications!
+        </h5>
+    </div>
+    <div class="col-3 align-self-center">
+        <a class="btn btn-success" href="{{ url_for('addNewTracker') }}">Add New Tracker</a>
+    </div>
+</div>
+<br>
+<div>
+    <table id="data" class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tracker in trackers %}
+            <tr>
+                <td>{{ tracker.name }}</td>
+                <td>{{ tracker.desc }}</td>
+                <td><a class="btn btn-primary btn-sm px-4" href="{{ tracker.name | to_nameid }}"> Go! </a></td>
+                <td><a class="btn btn-warning btn-sm"
+                        href="{{ url_for('editTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> Edit
+                    </a></td>
+                <td><a class="btn btn-danger btn-sm"
+                        href="{{ url_for('deleteTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> Delete
+                    </a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

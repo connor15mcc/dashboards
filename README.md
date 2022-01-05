@@ -7,6 +7,11 @@ Following my recruitment for Summer '22 during the Fall of 2021 (my junior year)
 ## Eventual Goals
 - Ability to add new applications easily
 - Ability to edit the progress of existing applications
+- Ability to delete applications/trackers/events
+- Relevant information available easily, additional information able to be input via menus
 - Ability to gain insight/data on the progression of applications on a large scale and extract to visualizations
 - Ability to control via webpage
 - Ability to autogenerate cover letters
+
+## Tips
+- You should create a `.env` file with `SECRET_KEY=your_key_here`

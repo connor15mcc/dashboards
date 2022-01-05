@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class=row>
+    <div class="col">
+        <h5><b>Name:</b> {{tracker.name}}
+            <br><b>Description:</b> {{tracker.desc}}
+        </h5>
+    </div>
+    <div class="col-3 align-self-center">
+        <a class="btn btn-success"
+            href="{{ url_for('addNewApplication', tracker_nameid = tracker.name | to_nameid ) }}">Add New
+            Application</a>
+    </div>
+</div>
+<br>
+<div>
+    <table id="data" class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Application ID</th>
+                <th>Company Name</th>
+                <th>Position</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in tracker.applications %}
+            <tr>
+                <td>{{ app.application_id }}</td>
+                <td>{{ app.company_name }}</td>
+                <td>{{ app.position_name }}</td>
+                <td><a class="btn btn-primary btn-sm"
+                        href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
+                        History</a></td>
+                <td><a class="btn btn-warning btn-sm"
+                        href="{{url_for('editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
+                        Edit </a></td>
+                <td><a class="btn btn-danger btn-sm"
+                        href="{{url_for('deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
+                        Delete </a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

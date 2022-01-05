@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class=row>
+    <div class="col">
+        <h5><b>Company:</b> {{application.company_name}}
+            <br><b>Position:</b> {{application.position_name}}
+        </h5>
+    </div>
+    <div class="col-3 align-self-center">
+        <a class="btn btn-success"
+            href="{{ url_for('addNewEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid , app_id = application.application_id) }}">Add
+            New
+            Event</a>
+    </div>
+</div>
+<br>
+<table id="data" class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th>Event ID</th>
+            <th>Event Description</th>
+            <th>From me?</th>
+            <th>Date</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in application.event_history %}
+        <tr>
+            <td>{{ event.event_id }}</td>
+            <td>{{ event.desc }}</td>
+            <td>{{ event.from_me }}</td>
+            <td>{{ event.date|formatdatetime }}</td>
+            <td><a class="btn btn-warning btn-sm"
+                    href="{{url_for('editEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid, app_id = application.application_id, event_id = event.event_id) }}">
+                    Edit </a></td>
+            <td><a class="btn btn-danger btn-sm"
+                    href="{{url_for('deleteEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid, app_id = application.application_id, event_id = event.event_id) }}">
+                    Edit </a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}
