@@ -3,22 +3,22 @@
 
 <div class=row>
     <div class="col">
-        <h5>Use this site to easily keep track of job applications!
+        <h5>Use this site to easily keep track of job applications. <br>
+            It can track everything! Here are your existing trackers:
         </h5>
     </div>
-    <div class="col-3 align-self-center">
-        <a class="btn btn-success" href="{{ url_for('addNewTracker') }}">Add New Tracker</a>
+    <div class="col-3 align-self-center" align="right">
+        <a class="btn btn-success" href="{{ url_for('addNewTracker') }}">Add New
+            Tracker <i class="bi bi-pencil-square"></i></a>
     </div>
 </div>
 <br>
-<div>
+<div style="overflow-x:auto;">
     <table id="data" class="table table-sm table-hover">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Description</th>
-                <th></th>
-                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -27,13 +27,16 @@
             <tr>
                 <td>{{ tracker.name }}</td>
                 <td>{{ tracker.desc }}</td>
-                <td><a class="btn btn-primary btn-sm px-4" href="{{ tracker.name | to_nameid }}"> Go! </a></td>
-                <td><a class="btn btn-warning btn-sm"
-                        href="{{ url_for('editTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> Edit
-                    </a></td>
-                <td><a class="btn btn-danger btn-sm"
-                        href="{{ url_for('deleteTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> Delete
-                    </a></td>
+                <td align="right">
+                    <a class="btn btn-primary btn-sm px-5 mx-2" href="{{ tracker.name | to_nameid }}">
+                        Go! </a>
+                    <a class="btn btn-warning btn-sm px-4 mx-2"
+                        href="{{ url_for('editTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> <i
+                            class="bi bi-pencil-fill"></i></a>
+                    <a class="btn btn-danger btn-sm mx-2"
+                        href="{{ url_for('deleteTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> <i
+                            class="bi bi-trash"></i></a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

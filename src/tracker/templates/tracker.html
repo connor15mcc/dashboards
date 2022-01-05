@@ -6,14 +6,14 @@
             <br><b>Description:</b> {{tracker.desc}}
         </h5>
     </div>
-    <div class="col-3 align-self-center">
+    <div class="col-3 align-self-center" align="right">
         <a class="btn btn-success"
-            href="{{ url_for('addNewApplication', tracker_nameid = tracker.name | to_nameid ) }}">Add New
-            Application</a>
+            href="{{ url_for('addNewApplication', tracker_nameid = tracker.name | to_nameid ) }}">Add New Application <i
+                class="bi bi-pencil-square"></i></a>
     </div>
 </div>
 <br>
-<div>
+<div style="overflow-x:auto;">
     <table id="data" class="table table-sm table-hover">
         <thead>
             <tr>
@@ -31,15 +31,15 @@
                 <td>{{ app.application_id }}</td>
                 <td>{{ app.company_name }}</td>
                 <td>{{ app.position_name }}</td>
-                <td><a class="btn btn-primary btn-sm"
-                        href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
-                        History</a></td>
-                <td><a class="btn btn-warning btn-sm"
+                <td align="right"><a class="btn btn-primary btn-sm px-5 mx-2"
+                        href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">Go!</a>
+                    <a class="btn btn-warning btn-sm px-4 mx-2"
                         href="{{url_for('editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
-                        Edit </a></td>
-                <td><a class="btn btn-danger btn-sm"
+                        <i class="bi bi-pencil-fill"></i> </a>
+                    <a class="btn btn-danger btn-sm mx-2"
                         href="{{url_for('deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
-                        Delete </a></td>
+                        <i class="bi bi-trash"></i> </a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

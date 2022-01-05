@@ -18,7 +18,8 @@
                     {% endfor%}
                 </div>
                 {% else %}
-                {{form.name(class="form-control form-control-lg")}}
+                {{form.name(class="form-control form-control-lg", autofocus="autofocus",
+                onfocus="this.select()")}}
                 {% endif %}
             </div>
             <div class="form-group">
