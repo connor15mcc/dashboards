@@ -26,8 +26,10 @@
             <tr>
                 <td>{{ tracker.name }}</td>
                 <td>{{ tracker.desc }}</td>
-                <td><a class="btn btn-primary btn-sm px-4" href="{{ tracker.name_id }}"> Go! </a></td>
-                <td><a class="btn btn-danger btn-sm" href="{{ tracker.name_id }}/edit"> Edit </a></td>
+                <td><a class="btn btn-primary btn-sm px-4" href="{{ tracker.name | to_nameid }}"> Go! </a></td>
+                <td><a class="btn btn-danger btn-sm"
+                        href="{{ url_for('editTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> Edit
+                    </a></td>
             </tr>
             {% endfor %}
         </tbody>

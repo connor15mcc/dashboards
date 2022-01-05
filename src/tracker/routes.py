@@ -1,8 +1,15 @@
-from flask import redirect, url_for, render_template, flash
+from flask import redirect, url_for, render_template, flash, request
 from flask_breadcrumbs import register_breadcrumb
-from tracker import app
-from tracker.models import Tracker, Application
-from tracker.forms import NewApplication, NewTracker, NewEvent
+from tracker import app, db
+from tracker.models import Tracker, Application, Event
+from tracker.forms import (
+    NewApplication,
+    NewTracker,
+    NewEvent,
+    EditApplication,
+    EditTracker,
+    EditEvent,
+)
 
 
 @app.route("/")
@@ -18,51 +25,26 @@ def allTrackers():
     )
 
 
-@app.route("/trackers/<tracker_name>/")
+@app.route("/trackers/<tracker_nameid>/")
 @register_breadcrumb(app, ".tracker", "Tracker")
-def oneTracker(tracker_name):
-    correctTracker = Tracker.query.filter_by(name_id=tracker_name).all()
-    if len(correctTracker) == 0:
-        return render_template(
-            "error.html", msg="Sorry, no trackers exist with this name."
-        )
-    elif len(correctTracker) == 1:
-        return render_template(
-            "tracker.html",
-            title=correctTracker[0].name,
-            tracker=correctTracker[0],
-        )
-    else:
-        return render_template(
-            "error.html",
-            msg="Sorry, multiple trackers exist with that name."
-            " Please clean the dataset.",
-        )
+def oneTracker(tracker_nameid):
+    trackerName = to_name(tracker_nameid)
+    (correctTracker,) = Tracker.query.filter_by(name=trackerName).all()
+    return render_template(
+        "tracker.html",
+        title=correctTracker.name,
+        tracker=correctTracker,
+    )
 
 
-@app.route("/trackers/<tracker_name>/<app_id>")
+@app.route("/trackers/<tracker_nameid>/<app_id>")
 @register_breadcrumb(
     app,
     ".tracker.application",
     "Application",
 )
-def oneApplication(tracker_name, app_id):
-    correctTracker = Tracker.query.filter_by(name_id=tracker_name).all()
-    if len(correctTracker) != 1:
-        return render_template(
-            "error.html",
-            msg="Sorry, either zero or multiple trackers exist with that name."
-            " Please clean the dataset.",
-        )
-    correctTracker = correctTracker[0]
-    correctApplication = Application.query.filter_by(application_id=app_id).all()
-    if len(correctApplication) != 1:
-        return render_template(
-            "error.html",
-            msg="Sorry, either zero or multiple applications exist with that id."
-            " Please clean the dataset.",
-        )
-    correctApplication = correctApplication[0]
+def oneApplication(tracker_nameid, app_id):
+    (correctApplication,) = Application.query.filter_by(application_id=app_id).all()
     return render_template(
         "application.html",
         title=correctApplication.company_name,
@@ -75,48 +57,79 @@ def oneApplication(tracker_name, app_id):
 def addNewTracker():
     form = NewTracker()
     if form.validate_on_submit():
-        flash(f"New Tracker added for {form.name.data}!", "success")
+        tracker = Tracker(name=to_name(to_nameid(form.name.data)), desc=form.desc.data)
+        db.session.add(tracker)
+        db.session.commit()
+        flash(f"New Tracker added for {tracker.name}!", "success")
         return redirect(url_for("allTrackers"))
     return render_template("new_tracker.html", title="New Tracker", form=form)
 
 
-@app.route("/trackers/<tracker_name>/add_new", methods=["GET", "POST"])
+@app.route("/trackers/<tracker_nameid>/add_new", methods=["GET", "POST"])
 @register_breadcrumb(app, ".tracker.add_new", "Add New Application")
-def addNewApplication(tracker_name):
+def addNewApplication(tracker_nameid):
     form = NewApplication()
     if form.validate_on_submit():
+        (correctTracker,) = Tracker.query.filter_by(name=to_name(tracker_nameid)).all()
+        application = Application(
+            company_name=form.company_name.data,
+            position_name=form.position_name.data,
+            of_tracker=correctTracker.tracker_id,
+        )
+        db.session.add(application)
+        db.session.commit()
         flash(f"New Application added for {form.company_name.data}!", "success")
-        return redirect(url_for("oneTracker", tracker_name=tracker_name))
+        return redirect(url_for("oneTracker", tracker_nameid=tracker_nameid))
     return render_template("new_application.html", title="New Application", form=form)
 
 
-@app.route("/trackers/<tracker_name>/<app_id>/add_new", methods=["GET", "POST"])
+@app.route("/trackers/<tracker_nameid>/<app_id>/add_new", methods=["GET", "POST"])
 @register_breadcrumb(app, ".tracker.application.add_new", "Add New Event")
-def addNewEvent(tracker_name, app_id):
+def addNewEvent(tracker_nameid, app_id):
     form = NewEvent()
     if form.validate_on_submit():
-        flash(f"New Event added for {form.date.data:%B %d, %Y}!", "success")
-        return redirect(
-            url_for("oneApplication", tracker_name=tracker_name, app_id=app_id)
+        (correctApplication,) = Application.query.filter_by(application_id=app_id).all()
+        event = Event(
+            desc=form.desc.data,
+            from_me=form.from_me.data,
+            date=form.date.data,
+            of_application=correctApplication.application_id,
         )
-    return render_template("new_event.html", title="New Appliction", form=form)
+        db.session.add(event)
+        db.session.commit()
+        flash(f"New Event added for {format_datetime(form.date.data)}!", "success")
+        return redirect(
+            url_for("oneApplication", tracker_nameid=tracker_nameid, app_id=app_id)
+        )
+    return render_template("new_event.html", title="New Event", form=form)
 
 
-@app.route("/trackers/<tracker_name>/edit")
+@app.route("/trackers/<tracker_nameid>/edit", methods=["GET", "POST"])
 @register_breadcrumb(app, ".tracker.edit", "Edit Tracker")
-def editTracker(tracker_name):
-    return f"edit {tracker_name}"
+def editTracker(tracker_nameid):
+    # TODO: the edit methods
+    # tracker =
+    form = EditTracker()
+    if form.validate_on_submit():
+        flash(f"Tracker {tracker_nameid} has been updated!", "")
+        return redirect(url_for("oneTracker", tracker_nameid=tracker_nameid))
+    elif request.method == "GET":
+        pass
+        # form.name_id =
+        # form.name =
+        # form.desc =
+    return render_template("edit_tracker.html", title="Edit Tracker", form=form)
 
 
-@app.route("/trackers/<tracker_name>/<app_id>/edit")
+@app.route("/trackers/<tracker_nameid>/<app_id>/edit")
 @register_breadcrumb(app, ".tracker.application.edit", "Edit Application")
-def editApplication(tracker_name, app_id):
+def editApplication(tracker_nameid, app_id):
     return f"edit {app_id}"
 
 
-@app.route("/tracker/<tracker_name>/<app_id>/<event_id>")
+@app.route("/tracker/<tracker_nameid>/<app_id>/<event_id>")
 @register_breadcrumb(app, ".tracker.application.event.edit", "Edit Event")
-def editEvent(tracker_name, app_id, event_id):
+def editEvent(tracker_nameid, app_id, event_id):
     return f"edit {event_id}"
 
 
@@ -127,3 +140,21 @@ def format_datetime(value, format="%B %d, %Y"):
     if value is None:
         return ""
     return value.strftime(format).lstrip("0").replace(" 0", " ")
+
+
+# Transforming Tracker Names to IDs and Vice Versa:
+@app.template_filter("to_nameid")
+def to_nameid(name: str) -> str:
+    return name.replace(" ", "_").lower()
+
+
+@app.template_filter("to_name")
+def to_name(nameid: str) -> str:
+    parts = nameid.replace("_", " ").split(" ")
+    return " ".join([word.capitalize() for word in parts])
+
+
+@app.template_filter("to_nameid_from_trackerid")
+def to_nameid_from_trackerid(trackerid: int) -> str:
+    (correctTracker,) = Tracker.query.filter_by(tracker_id=trackerid)
+    return to_nameid(correctTracker.name)

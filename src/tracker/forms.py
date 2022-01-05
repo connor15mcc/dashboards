@@ -8,10 +8,9 @@ from datetime import datetime
 
 
 class NewTracker(FlaskForm):
-    name_id = StringField("Name ID", validators=[DataRequired(), Regexp(r"^[\w_-]+$")])
-    name = StringField("Pretty Name", validators=[DataRequired(), Regexp(r"^[\w ]+$")])
+    name = StringField("Name", validators=[DataRequired(), Regexp(r"^[\w ]+$")])
     desc = StringField(
-        "Description", validators=[DataRequired(), Regexp(r"^[\w _\-!.,]+$")]
+        "Description", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
     )
 
     submit = SubmitField("Add Tracker")
@@ -19,10 +18,10 @@ class NewTracker(FlaskForm):
 
 class NewApplication(FlaskForm):
     company_name = StringField(
-        "Company Name", validators=[DataRequired(), Regexp(r"^[\w ]+$")]
+        "Company Name", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
     )
     position_name = StringField(
-        "Position Name", validators=[DataRequired(), Regexp(r"^[\w ]+$")]
+        "Position Name", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
     )
     # source =
     # link = StringField("Link")
@@ -32,7 +31,9 @@ class NewApplication(FlaskForm):
 
 
 class NewEvent(FlaskForm):
-    desc = StringField("Description", validators=[DataRequired(), Regexp(r"^[\w ]+$")])
+    desc = StringField(
+        "Description", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    )
     from_me = BooleanField("From me?")
     date = DateTimeLocalField(
         "Date",
@@ -41,3 +42,40 @@ class NewEvent(FlaskForm):
     )
 
     submit = SubmitField("Add Event")
+
+
+class EditTracker(FlaskForm):
+    name = StringField("Pretty Name", validators=[DataRequired(), Regexp(r"^[\w ]+$")])
+    desc = StringField(
+        "Description", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    )
+
+    submit = SubmitField("Edit Tracker")
+
+
+class EditApplication(FlaskForm):
+    company_name = StringField(
+        "Company Name", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    )
+    position_name = StringField(
+        "Position Name", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    )
+    # source =
+    # link = StringField("Link")
+    # status = StringField("Status")
+
+    submit = SubmitField("Edit Application")
+
+
+class EditEvent(FlaskForm):
+    desc = StringField(
+        "Description", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    )
+    from_me = BooleanField("From me?")
+    date = DateTimeLocalField(
+        "Date",
+        default=datetime.now,
+        validators=[DataRequired()],
+    )
+
+    submit = SubmitField("Edit Event")

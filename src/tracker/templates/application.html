@@ -8,7 +8,7 @@
     </div>
     <div class="col-3 align-self-center">
         <a class="btn btn-success"
-            href="{{ url_for('addNewEvent', tracker_name = application.of_tracker, app_id = application.application_id) }}">Add
+            href="{{ url_for('addNewEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid , app_id = application.application_id) }}">Add
             New
             Event</a>
     </div>

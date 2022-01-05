@@ -4,37 +4,39 @@
     <form method="POST" action="">
         {{form.hidden_tag()}}
         <fieldset class="form-group">
-            <legend class=>Add a new tracker:</legend>
+            <legend class=>Edit application to {{application.company_name}}:</legend>
             <div class="form-group">
-                {{form.name.label(class="form-control-label")}}
+                {{form.company_name.label(class="form-control-label")}}
 
-                {% if form.name.errors %}
-                {{ form.name(class="form-control form-control-lg is-invalid")}}
+                {% if form.company_name.errors %}
+                {{ form.company_name(class="form-control form-control-lg is-invalid", autofocus="autofocus",
+                onfocus="this.select()")}}
                 <div class="invalid-feedback">
-                    {% for error in form.name.errors %}
+                    {% for error in form.company_name.errors %}
                     <span>
                         {{ error }}
                     </span>
                     {% endfor%}
                 </div>
                 {% else %}
-                {{form.name(class="form-control form-control-lg")}}
+                {{form.company_name(class="form-control form-control-lg", autofocus="autofocus",
+                onfocus="this.select()")}}
                 {% endif %}
             </div>
             <div class="form-group">
-                {{form.desc.label(class="form-control-label")}}
+                {{form.position_name.label(class="form-control-label")}}
 
-                {% if form.desc.errors %}
-                {{ form.desc(class="form-control form-control-lg is-invalid")}}
+                {% if form.position_name.errors %}
+                {{ form.position_name(class="form-control form-control-lg is-invalid")}}
                 <div class="invalid-feedback">
-                    {% for error in form.desc.errors %}
+                    {% for error in form.position_name.errors %}
                     <span>
                         {{ error }}
                     </span>
                     {% endfor%}
                 </div>
                 {% else %}
-                {{form.desc(class="form-control form-control-lg")}}
+                {{form.position_name(class="form-control form-control-lg")}}
                 {% endif %}
             </div>
         </fieldset>
