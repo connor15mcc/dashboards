@@ -17,20 +17,20 @@
     <table id="data" class="table table-sm table-hover">
         <thead>
             <tr>
-                <th>Application ID</th>
                 <th>Company Name</th>
                 <th>Position</th>
-                <th></th>
-                <th></th>
+                <th>Status</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             {% for app in tracker.applications %}
             <tr>
-                <td>{{ app.application_id }}</td>
                 <td>{{ app.company_name }}</td>
-                <td>{{ app.position_name }}</td>
+                <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
+                    {% else %} {{app.position_name}}
+                    {% endif %}</td>
+                <td>{{app.status}}</td>
                 <td align="right"><a class="btn btn-primary btn-sm px-5 mx-2"
                         href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">Go!</a>
                     <a class="btn btn-warning btn-sm px-4 mx-2"

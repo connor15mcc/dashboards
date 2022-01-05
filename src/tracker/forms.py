@@ -21,10 +21,10 @@ class NewApplication(FlaskForm):
     source = SelectField(
         "Source",
         choices=[
-            ("linkedin", "LinkedIn"),
-            ("handshake", "Handshake"),
-            ("indeed", "Indeed"),
-            ("other", "Other"),
+            ("LinkedIn", "LinkedIn"),
+            ("Handshake", "Handshake"),
+            ("Indeed", "Indeed"),
+            ("Other", "Other"),
         ],
     )
     link = URLField("URL", validators=[DataRequired()])
@@ -74,10 +74,10 @@ class EditApplication(FlaskForm):
     source = SelectField(
         "Source",
         choices=[
-            ("linkedin", "LinkedIn"),
-            ("handshake", "Handshake"),
-            ("indeed", "Indeed"),
-            ("other", "Other"),
+            ("LinkedIn", "LinkedIn"),
+            ("Handshake", "Handshake"),
+            ("Indeed", "Indeed"),
+            ("Other", "Other"),
         ],
     )
     link = URLField("URL", validators=[DataRequired()])
