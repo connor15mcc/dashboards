@@ -134,3 +134,6 @@ dmypy.json
 
 # Don't save environment variables
 .env
+
+# Databases
+.db
