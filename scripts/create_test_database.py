@@ -10,6 +10,9 @@ tracker1 = Tracker(
             application_id="3",
             company_name="Connor's Pizza",
             position_name="DE",
+            source="linkedin",
+            link="google.com",
+            status="Applied",
             event_history=[
                 Event(
                     event_id="5",
@@ -32,6 +35,9 @@ tracker2 = Tracker(
             application_id="0",
             company_name="Connor's Store",
             position_name="SWE",
+            source="linkedin",
+            link="google.com",
+            status="Applied",
             event_history=[
                 Event(
                     event_id="1",
@@ -54,6 +60,9 @@ tracker2 = Tracker(
             application_id="1",
             company_name="Connor's Donuts",
             position_name="SDE",
+            source="linkedin",
+            link="google.com",
+            status="Applied",
             event_history=[
                 Event(
                     event_id="7",

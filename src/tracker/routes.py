@@ -74,6 +74,9 @@ def addNewApplication(tracker_nameid):
         application = Application(
             company_name=form.company_name.data,
             position_name=form.position_name.data,
+            source=form.source.data,
+            link=form.link.data,
+            status=form.status.data,
             of_tracker=correctTracker.tracker_id,
         )
         db.session.add(application)
@@ -129,6 +132,9 @@ def editApplication(tracker_nameid, app_id):
     if form.validate_on_submit():
         currentApplication.company_name = form.company_name.data
         currentApplication.position_name = form.position_name.data
+        currentApplication.source = form.source.data
+        currentApplication.link = form.link.data
+        currentApplication.status = form.status.data
         db.session.commit()
         flash(
             f"Application for {currentApplication.company_name} has been updated!",
@@ -138,6 +144,9 @@ def editApplication(tracker_nameid, app_id):
     elif request.method == "GET":
         form.company_name.data = currentApplication.company_name
         form.position_name.data = currentApplication.position_name
+        form.source.data = currentApplication.source
+        form.link.data = currentApplication.link
+        form.status.data = currentApplication.status
     return render_template("edit_application.html", title="Edit Application", form=form)
 
 
@@ -159,6 +168,7 @@ def editEvent(tracker_nameid, app_id, event_id):
             url_for("oneApplication", tracker_nameid=tracker_nameid, app_id=app_id)
         )
     elif request.method == "GET":
+        print(type(currentEvent.from_me))
         form.desc.data = currentEvent.desc
         form.from_me.data = currentEvent.from_me
         form.date.data = currentEvent.date

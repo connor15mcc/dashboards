@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField
+from wtforms.fields.choices import RadioField, SelectField
 
-from wtforms.fields.simple import BooleanField, SubmitField
+from wtforms.fields.simple import SubmitField, URLField
 from wtforms.validators import DataRequired, Regexp
 from wtforms.fields import DateTimeLocalField
 from datetime import datetime
@@ -9,32 +10,48 @@ from datetime import datetime
 
 class NewTracker(FlaskForm):
     name = StringField("Name", validators=[DataRequired(), Regexp(r"^[\w ]+$")])
-    desc = StringField(
-        "Description", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
-    )
+    desc = StringField("Description", validators=[DataRequired()])
 
     submit = SubmitField("Add Tracker")
 
 
 class NewApplication(FlaskForm):
-    company_name = StringField(
-        "Company Name", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    company_name = StringField("Company Name", validators=[DataRequired()])
+    position_name = StringField("Position Name", validators=[DataRequired()])
+    source = SelectField(
+        "Source",
+        choices=[
+            ("linkedin", "LinkedIn"),
+            ("handshake", "Handshake"),
+            ("indeed", "Indeed"),
+            ("other", "Other"),
+        ],
     )
-    position_name = StringField(
-        "Position Name", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    link = URLField("URL", validators=[DataRequired()])
+    status = SelectField(
+        "Status",
+        choices=[
+            ("found", "Found"),
+            ("applied", "Applied"),
+            ("accepted", "Accepted"),
+            ("rejected", "Rejected"),
+        ],
     )
-    # source =
-    # link = StringField("Link")
-    # status = StringField("Status")
 
     submit = SubmitField("Add Application")
 
 
 class NewEvent(FlaskForm):
-    desc = StringField(
-        "Description", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    desc = StringField("Description", validators=[DataRequired()])
+    from_me = RadioField(
+        "From:",
+        choices=[
+            (True, "Me"),
+            (False, "The Company"),
+        ],
+        coerce=bool,
+        validators=[DataRequired()],
     )
-    from_me = BooleanField("From me?")
     date = DateTimeLocalField(
         "Date",
         default=datetime.now,
@@ -46,32 +63,48 @@ class NewEvent(FlaskForm):
 
 class EditTracker(FlaskForm):
     name = StringField("Pretty Name", validators=[DataRequired(), Regexp(r"^[\w ]+$")])
-    desc = StringField(
-        "Description", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
-    )
+    desc = StringField("Description", validators=[DataRequired()])
 
     submit = SubmitField("Apply Changes")
 
 
 class EditApplication(FlaskForm):
-    company_name = StringField(
-        "Company Name", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    company_name = StringField("Company Name", validators=[DataRequired()])
+    position_name = StringField("Position Name", validators=[DataRequired()])
+    source = SelectField(
+        "Source",
+        choices=[
+            ("linkedin", "LinkedIn"),
+            ("handshake", "Handshake"),
+            ("indeed", "Indeed"),
+            ("other", "Other"),
+        ],
     )
-    position_name = StringField(
-        "Position Name", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    link = URLField("URL", validators=[DataRequired()])
+    status = SelectField(
+        "Status",
+        choices=[
+            ("found", "Found"),
+            ("applied", "Applied"),
+            ("accepted", "Accepted"),
+            ("rejected", "Rejected"),
+        ],
     )
-    # source =
-    # link = StringField("Link")
-    # status = StringField("Status")
 
     submit = SubmitField("Apply Changes")
 
 
 class EditEvent(FlaskForm):
-    desc = StringField(
-        "Description", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
+    desc = StringField("Description", validators=[DataRequired()])
+    from_me = RadioField(
+        "From:",
+        choices=[
+            (True, "Me"),
+            (False, "The Company"),
+        ],
+        coerce=bool,
+        validators=[DataRequired()],
     )
-    from_me = BooleanField("From me?")
     date = DateTimeLocalField(
         "Date",
         default=datetime.now,

@@ -24,10 +24,15 @@
                 {% endif %}
             </div>
             <div class="form-group">
-                {{form.from_me.label(class="form-control-label")}}
+                {{form.from_me.label(class="form-control-label")}} <br>
 
                 {% if form.from_me.errors %}
-                {{ form.from_me(class="form-control form-control-lg is-invalid")}}
+                {% for subfield in form.from_me %}
+                <tr class="form-control form-control-lg">
+                    <td>{{ subfield }}</td>
+                    <td>{{ subfield.label }}</td>
+                </tr>
+                {% endfor %}
                 <div class="invalid-feedback">
                     {% for error in form.from_me.errors %}
                     <span>
@@ -36,7 +41,13 @@
                     {% endfor%}
                 </div>
                 {% else %}
-                {{form.from_me(class="form-control form-control-lg")}}
+                {% for subfield in form.from_me %}
+                <tr class="form-control form-control-lg">
+                    <td>{{ subfield }}</td>
+                    <td>{{ subfield.label }}</td>
+                </tr>
+                {% endfor %}
+
                 {% endif %}
             </div>
             <div class="form-group">

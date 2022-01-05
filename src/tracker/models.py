@@ -16,9 +16,9 @@ class Application(db.Model):
     application_id = db.Column(db.Integer, primary_key=True)
     company_name = db.Column(db.String, nullable=False)
     position_name = db.Column(db.String, nullable=False)
-    source = db.Column(db.String)
-    link = db.Column(db.String)
-    status = db.Column(db.String)
+    source = db.Column(db.String, nullable=False)
+    link = db.Column(db.String, nullable=False)
+    status = db.Column(db.String, nullable=False)
     of_tracker = db.Column(
         db.String, db.ForeignKey("tracker.tracker_id"), nullable=False
     )
