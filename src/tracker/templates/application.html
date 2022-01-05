@@ -22,6 +22,7 @@
             <th>From me?</th>
             <th>Date</th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -31,7 +32,12 @@
             <td>{{ event.desc }}</td>
             <td>{{ event.from_me }}</td>
             <td>{{ event.date|formatdatetime }}</td>
-            <td><a class="btn btn-danger btn-sm" href="{{ event.event_id }}/edit"> Edit </a></td>
+            <td><a class="btn btn-warning btn-sm"
+                    href="{{url_for('editEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid, app_id = application.application_id, event_id = event.event_id) }}">
+                    Edit </a></td>
+            <td><a class="btn btn-danger btn-sm"
+                    href="{{url_for('deleteEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid, app_id = application.application_id, event_id = event.event_id) }}">
+                    Edit </a></td>
         </tr>
         {% endfor %}
     </tbody>

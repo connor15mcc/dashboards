@@ -50,7 +50,7 @@ class EditTracker(FlaskForm):
         "Description", validators=[DataRequired(), Regexp(r"^[\w _\-!.,']+$")]
     )
 
-    submit = SubmitField("Edit Tracker")
+    submit = SubmitField("Apply Changes")
 
 
 class EditApplication(FlaskForm):
@@ -64,7 +64,7 @@ class EditApplication(FlaskForm):
     # link = StringField("Link")
     # status = StringField("Status")
 
-    submit = SubmitField("Edit Application")
+    submit = SubmitField("Apply Changes")
 
 
 class EditEvent(FlaskForm):
@@ -78,4 +78,4 @@ class EditEvent(FlaskForm):
         validators=[DataRequired()],
     )
 
-    submit = SubmitField("Edit Event")
+    submit = SubmitField("Apply Changes")

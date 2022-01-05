@@ -1,4 +1,4 @@
-from flask import redirect, url_for, render_template, flash, request
+from flask import redirect, url_for, render_template, flash, request, session
 from flask_breadcrumbs import register_breadcrumb
 from tracker import app, db
 from tracker.models import Tracker, Application, Event
@@ -105,32 +105,99 @@ def addNewEvent(tracker_nameid, app_id):
 
 
 @app.route("/trackers/<tracker_nameid>/edit", methods=["GET", "POST"])
-@register_breadcrumb(app, ".tracker.edit", "Edit Tracker")
+@register_breadcrumb(app, ".edit", "Edit Tracker")
 def editTracker(tracker_nameid):
-    # TODO: the edit methods
-    # tracker =
+    (currentTracker,) = Tracker.query.filter_by(name=to_name(tracker_nameid)).all()
     form = EditTracker()
     if form.validate_on_submit():
-        flash(f"Tracker {tracker_nameid} has been updated!", "")
-        return redirect(url_for("oneTracker", tracker_nameid=tracker_nameid))
+        currentTracker.name = to_name(to_nameid(form.name.data))
+        currentTracker.desc = form.desc.data
+        db.session.commit()
+        flash(f"Tracker {currentTracker.name} has been updated!", "success")
+        return redirect(url_for("allTrackers"))
     elif request.method == "GET":
-        pass
-        # form.name_id =
-        # form.name =
-        # form.desc =
+        form.name.data = currentTracker.name
+        form.desc.data = currentTracker.desc
     return render_template("edit_tracker.html", title="Edit Tracker", form=form)
 
 
-@app.route("/trackers/<tracker_nameid>/<app_id>/edit")
-@register_breadcrumb(app, ".tracker.application.edit", "Edit Application")
+@app.route("/trackers/<tracker_nameid>/<app_id>/edit", methods=["GET", "POST"])
+@register_breadcrumb(app, ".tracker.edit", "Edit Application")
 def editApplication(tracker_nameid, app_id):
-    return f"edit {app_id}"
+    (currentApplication,) = Application.query.filter_by(application_id=app_id).all()
+    form = EditApplication()
+    if form.validate_on_submit():
+        currentApplication.company_name = form.company_name.data
+        currentApplication.position_name = form.position_name.data
+        db.session.commit()
+        flash(
+            f"Application for {currentApplication.company_name} has been updated!",
+            "success",
+        )
+        return redirect(url_for("oneTracker", tracker_nameid=tracker_nameid))
+    elif request.method == "GET":
+        form.company_name.data = currentApplication.company_name
+        form.position_name.data = currentApplication.position_name
+    return render_template("edit_application.html", title="Edit Application", form=form)
 
 
-@app.route("/tracker/<tracker_nameid>/<app_id>/<event_id>")
-@register_breadcrumb(app, ".tracker.application.event.edit", "Edit Event")
+@app.route("/tracker/<tracker_nameid>/<app_id>/<event_id>", methods=["GET", "POST"])
+@register_breadcrumb(app, ".tracker.application.edit", "Edit Event")
 def editEvent(tracker_nameid, app_id, event_id):
-    return f"edit {event_id}"
+    (currentEvent,) = Event.query.filter_by(event_id=event_id).all()
+    form = EditEvent()
+    if form.validate_on_submit():
+        currentEvent.desc = form.desc.data
+        currentEvent.from_me = form.from_me.data
+        currentEvent.date = form.date.data
+        db.session.commit()
+        flash(
+            f"Event with {currentEvent.desc} has been updated!",
+            "success",
+        )
+        return redirect(
+            url_for("oneApplication", tracker_nameid=tracker_nameid, app_id=app_id)
+        )
+    elif request.method == "GET":
+        form.desc.data = currentEvent.desc
+        form.from_me.data = currentEvent.from_me
+        form.date.data = currentEvent.date
+    return render_template("edit_event.html", title="Edit Event", form=form)
+
+
+@app.route("/tracker/<tracker_nameid>/delete", methods=["GET"])
+def deleteTracker(tracker_nameid):
+    (currentTracker,) = Tracker.query.filter_by(name=to_name(tracker_nameid)).all()
+    for application in currentTracker.applications:
+        deleteApplication(tracker_nameid, application.application_id)
+    session["_flashes"].clear()
+    db.session.delete(currentTracker)
+    db.session.commit()
+    flash("This tracker has been deleted", "success")
+    return redirect(url_for("allTrackers"))
+
+
+@app.route("/tracker/<tracker_nameid>/<app_id>/delete", methods=["GET"])
+def deleteApplication(tracker_nameid, app_id):
+    (currentApplication,) = Application.query.filter_by(application_id=app_id).all()
+    for event in currentApplication.event_history:
+        deleteEvent(tracker_nameid, app_id, event.event_id)
+    session["_flashes"].clear()
+    db.session.delete(currentApplication)
+    db.session.commit()
+    flash("This application has been deleted", "success")
+    return redirect(url_for("oneTracker", tracker_nameid=tracker_nameid))
+
+
+@app.route("/tracker/<tracker_nameid>/<app_id>/<event_id>/delete", methods=["GET"])
+def deleteEvent(tracker_nameid, app_id, event_id):
+    (currentEvent,) = Event.query.filter_by(event_id=event_id).all()
+    db.session.delete(currentEvent)
+    db.session.commit()
+    flash("This event has been deleted", "success")
+    return redirect(
+        url_for("oneApplication", tracker_nameid=tracker_nameid, app_id=app_id)
+    )
 
 
 # Formatting Datetimes in Jinja:

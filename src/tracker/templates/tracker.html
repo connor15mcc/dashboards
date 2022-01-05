@@ -22,6 +22,7 @@
                 <th>Position</th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -30,8 +31,15 @@
                 <td>{{ app.application_id }}</td>
                 <td>{{ app.company_name }}</td>
                 <td>{{ app.position_name }}</td>
-                <td><a class="btn btn-primary btn-sm" href="{{ app.application_id }}">View History</a></td>
-                <td><a class="btn btn-danger btn-sm" href="{{ app.application_id }}/edit"> Edit </a></td>
+                <td><a class="btn btn-primary btn-sm"
+                        href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
+                        History</a></td>
+                <td><a class="btn btn-warning btn-sm"
+                        href="{{url_for('editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
+                        Edit </a></td>
+                <td><a class="btn btn-danger btn-sm"
+                        href="{{url_for('deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
+                        Delete </a></td>
             </tr>
             {% endfor %}
         </tbody>

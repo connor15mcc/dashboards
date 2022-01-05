@@ -4,7 +4,7 @@
     <form method="POST" action="">
         {{form.hidden_tag()}}
         <fieldset class="form-group">
-            <legend class=>Edit application to {{application.company_name}}:</legend>
+            <legend class=>Edit application to {{form.company_name.data}}:</legend>
             <div class="form-group">
                 {{form.company_name.label(class="form-control-label")}}
 
