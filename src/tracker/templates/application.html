@@ -28,7 +28,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for event in application.event_history %}
+            {% for event in application | sortedEvents %}
             <tr>
                 <td>{{ event.desc }}</td>
                 <td> {% if event.from_me %} Me {% else %} Them {% endif %}</td>

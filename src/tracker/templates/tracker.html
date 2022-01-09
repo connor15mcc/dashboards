@@ -2,8 +2,8 @@
 {% block content %}
 <div class=row>
     <div class="col">
-        <h5><b>Name:</b> {{tracker.name}}
-            <br><b>Description:</b> {{tracker.desc}}
+        <h5><b>Name:</b> {{tracker.name}}<br>
+            <b>Description:</b> {{tracker.desc}}
         </h5>
     </div>
     <div class="col-3 align-self-center" align="right">
@@ -14,29 +14,119 @@
 </div>
 <br>
 <div style="overflow-x:auto;">
+    <h5>Action Needed:</h5>
     <table id="data" class="table table-sm table-hover">
         <thead>
             <tr>
                 <th>Company Name</th>
                 <th>Position</th>
                 <th>Status</th>
+                <th>Time Since</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            {% for app in tracker.applications %}
+            {% for app in tracker.applications | filterAppsNeedAction %}
             <tr>
                 <td>{{ app.company_name }}</td>
                 <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
                     {% else %} {{app.position_name}}
                     {% endif %}</td>
                 <td>{{app.status}}</td>
-                <td align="right"><a class="btn btn-primary btn-sm px-5 mx-2"
-                        href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">Go!</a>
-                    <a class="btn btn-warning btn-sm px-4 mx-2"
+                <td>{{app | timeSinceUpdate | formattimedelta }}</td>
+                <td align="right">
+                    <a class="btn btn-success btn-sm px-3 mx-1"
+                        href="{{url_for('addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
+                            class="bi bi-plus-lg"></i> Add History</a>
+                    <a class="btn btn-primary btn-sm px-4 mx-1"
+                        href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
+                        History</a>
+                    <a class="btn btn-warning btn-sm px-4 mx-1"
                         href="{{url_for('editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
                         <i class="bi bi-pencil-fill"></i> </a>
-                    <a class="btn btn-danger btn-sm mx-2"
+                    <a class="btn btn-danger btn-sm mx-1"
+                        href="{{url_for('deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
+                        <i class="bi bi-trash"></i> </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+<div style="overflow-x:auto;">
+    <h5>No Action Needed:</h5>
+    <table id="data" class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th>Time Since</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in tracker.applications | filterAppsStillValid %}
+            <tr>
+                <td>{{ app.company_name }}</td>
+                <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
+                    {% else %} {{app.position_name}}
+                    {% endif %}</td>
+                <td>{{app.status}}</td>
+                <td>{{app | timeSinceUpdate | formattimedelta }}</td>
+                <td align="right">
+                    <a class="btn btn-success btn-sm px-3 mx-1"
+                        href="{{url_for('addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
+                            class="bi bi-plus-lg"></i> Add History</a>
+                    <a class="btn btn-primary btn-sm px-4 mx-1"
+                        href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
+                        History</a>
+                    <a class="btn btn-warning btn-sm px-4 mx-1"
+                        href="{{url_for('editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
+                        <i class="bi bi-pencil-fill"></i> </a>
+                    <a class="btn btn-danger btn-sm mx-1"
+                        href="{{url_for('deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
+                        <i class="bi bi-trash"></i> </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+<div style="overflow-x:auto;">
+    <h5>No Longer In Consideration:</h5>
+    <table id="data" class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th>Time Since</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in tracker.applications | filterAppsOther %}
+            <tr>
+                <td>{{ app.company_name }}</td>
+                <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
+                    {% else %} {{app.position_name}}
+                    {% endif %}</td>
+                <td>{{app.status}}</td>
+                <td>{{app | timeSinceUpdate | formattimedelta }}</td>
+                <td align="right">
+                    <a class="btn btn-success btn-sm px-3 mx-1"
+                        href="{{url_for('addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
+                            class="bi bi-plus-lg"></i> Add History</a>
+                    <a class="btn btn-primary btn-sm px-4 mx-1"
+                        href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
+                        History</a>
+                    <a class="btn btn-warning btn-sm px-4 mx-1"
+                        href="{{url_for('editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
+                        <i class="bi bi-pencil-fill"></i> </a>
+                    <a class="btn btn-danger btn-sm mx-1"
                         href="{{url_for('deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
                         <i class="bi bi-trash"></i> </a>
                 </td>

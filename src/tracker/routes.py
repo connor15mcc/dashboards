@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import redirect, url_for, render_template, flash, request, session
 from flask_breadcrumbs import register_breadcrumb
 from tracker import app, db
@@ -10,6 +11,15 @@ from tracker.forms import (
     EditTracker,
     EditEvent,
 )
+from tracker.filters import (  # noqa:F401
+    format_datetime,
+    timeSinceUpdate,
+    to_nameid,
+    to_name,
+    to_nameid_from_trackerid,
+    sortedEvents,
+)
+from tracker.functions import updateStatus
 
 
 @app.route("/")
@@ -76,10 +86,19 @@ def addNewApplication(tracker_nameid):
             position_name=form.position_name.data,
             source=form.source.data,
             link=form.link.data,
-            status=form.status.data,
+            status="Initialized",
             of_tracker=correctTracker.tracker_id,
         )
         db.session.add(application)
+        db.session.commit()
+        firstHistory = Event(
+            desc=f"Initialized application for {form.company_name.data}",
+            from_me=True,
+            action_necessary=True,
+            date=datetime.now(),
+            of_application=application.application_id,
+        )
+        db.session.add(firstHistory)
         db.session.commit()
         flash(f"New Application added for {form.company_name.data}!", "success")
         return redirect(url_for("oneTracker", tracker_nameid=tracker_nameid))
@@ -90,14 +109,17 @@ def addNewApplication(tracker_nameid):
 @register_breadcrumb(app, ".tracker.application.add_new", "Add New Event")
 def addNewEvent(tracker_nameid, app_id):
     form = NewEvent()
+    print(type(form.date.data))
     if form.validate_on_submit():
         (correctApplication,) = Application.query.filter_by(application_id=app_id).all()
         event = Event(
             desc=form.desc.data,
             from_me=form.from_me.data,
+            action_necessary=form.action_necessary.data,
             date=form.date.data,
             of_application=correctApplication.application_id,
         )
+        updateStatus(correctApplication, form.desc.data)
         db.session.add(event)
         db.session.commit()
         flash(f"New Event added for {format_datetime(form.date.data)}!", "success")
@@ -156,8 +178,13 @@ def editEvent(tracker_nameid, app_id, event_id):
     (currentEvent,) = Event.query.filter_by(event_id=event_id).all()
     form = EditEvent()
     if form.validate_on_submit():
+        (correctApplication,) = Application.query.filter_by(application_id=app_id).all()
+        updateStatus(correctApplication, form.desc.data)
+        db.session.commit()
+
         currentEvent.desc = form.desc.data
         currentEvent.from_me = form.from_me.data
+        currentEvent.action_necessary = form.action_necessary.data
         currentEvent.date = form.date.data
         db.session.commit()
         flash(
@@ -168,9 +195,9 @@ def editEvent(tracker_nameid, app_id, event_id):
             url_for("oneApplication", tracker_nameid=tracker_nameid, app_id=app_id)
         )
     elif request.method == "GET":
-        print(type(currentEvent.from_me))
         form.desc.data = currentEvent.desc
         form.from_me.data = currentEvent.from_me
+        form.action_necessary.data = currentEvent.action_necessary
         form.date.data = currentEvent.date
     return render_template("edit_event.html", title="Edit Event", form=form)
 
@@ -208,30 +235,3 @@ def deleteEvent(tracker_nameid, app_id, event_id):
     return redirect(
         url_for("oneApplication", tracker_nameid=tracker_nameid, app_id=app_id)
     )
-
-
-# Formatting Datetimes in Jinja:
-@app.template_filter("formatdatetime")
-def format_datetime(value, format="%B %d, %Y"):
-    """Format a date time to (Default): Month Day, LongYear"""
-    if value is None:
-        return ""
-    return value.strftime(format).lstrip("0").replace(" 0", " ")
-
-
-# Transforming Tracker Names to IDs and Vice Versa:
-@app.template_filter("to_nameid")
-def to_nameid(name: str) -> str:
-    return name.replace(" ", "_").lower()
-
-
-@app.template_filter("to_name")
-def to_name(nameid: str) -> str:
-    parts = nameid.replace("_", " ").split(" ")
-    return " ".join([word.capitalize() for word in parts])
-
-
-@app.template_filter("to_nameid_from_trackerid")
-def to_nameid_from_trackerid(trackerid: int) -> str:
-    (correctTracker,) = Tracker.query.filter_by(tracker_id=trackerid)
-    return to_nameid(correctTracker.name)

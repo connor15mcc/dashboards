@@ -35,7 +35,8 @@ class Event(db.Model):
     event_id = db.Column(db.Integer, primary_key=True)
     desc = db.Column(db.String, nullable=False)
     from_me = db.Column(db.Boolean, nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    action_necessary = db.Column(db.Boolean, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     of_application = db.Column(
         db.Integer, db.ForeignKey("application.application_id"), nullable=False
     )

@@ -1,9 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.fields.choices import RadioField, SelectField
-
 from wtforms.fields.simple import SubmitField, URLField
-from wtforms.validators import DataRequired, Regexp
+from wtforms.validators import DataRequired, Regexp, AnyOf
 from wtforms.fields import DateTimeLocalField
 from datetime import datetime
 
@@ -27,16 +26,7 @@ class NewApplication(FlaskForm):
             ("Other", "Other"),
         ],
     )
-    link = URLField("URL", validators=[DataRequired()])
-    status = SelectField(
-        "Status",
-        choices=[
-            ("found", "Found"),
-            ("applied", "Applied"),
-            ("accepted", "Accepted"),
-            ("rejected", "Rejected"),
-        ],
-    )
+    link = URLField("URL", validators=[])
 
     submit = SubmitField("Add Application")
 
@@ -46,11 +36,20 @@ class NewEvent(FlaskForm):
     from_me = RadioField(
         "From:",
         choices=[
-            (True, "Me"),
-            (False, "The Company"),
+            ("true", "Me"),
+            ("false", "The Company"),
         ],
-        coerce=bool,
-        validators=[DataRequired()],
+        coerce=lambda x: True if x == "true" else False,
+        validators=[AnyOf([True, False])],
+    )
+    action_necessary = RadioField(
+        "Action Necessary:",
+        choices=[
+            ("true", "Yes"),
+            ("false", "No"),
+        ],
+        coerce=lambda x: True if x == "true" else False,
+        validators=[AnyOf([True, False])],
     )
     date = DateTimeLocalField(
         "Date",
@@ -80,14 +79,14 @@ class EditApplication(FlaskForm):
             ("Other", "Other"),
         ],
     )
-    link = URLField("URL", validators=[DataRequired()])
+    link = URLField("URL", validators=[])
     status = SelectField(
         "Status",
         choices=[
-            ("found", "Found"),
-            ("applied", "Applied"),
-            ("accepted", "Accepted"),
-            ("rejected", "Rejected"),
+            ("Found", "Found"),
+            ("Applied", "Applied"),
+            ("Accepted", "Accepted"),
+            ("Rejected", "Rejected"),
         ],
     )
 
@@ -99,11 +98,20 @@ class EditEvent(FlaskForm):
     from_me = RadioField(
         "From:",
         choices=[
-            (True, "Me"),
-            (False, "The Company"),
+            ("true", "Me"),
+            ("false", "The Company"),
         ],
-        coerce=bool,
-        validators=[DataRequired()],
+        coerce=lambda x: True if x == "true" else False,
+        validators=[AnyOf([True, False])],
+    )
+    action_necessary = RadioField(
+        "Action Necessary:",
+        choices=[
+            ("true", "Yes"),
+            ("false", "No"),
+        ],
+        coerce=lambda x: True if x == "true" else False,
+        validators=[AnyOf([True, False])],
     )
     date = DateTimeLocalField(
         "Date",

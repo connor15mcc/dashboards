@@ -51,6 +51,33 @@
                 {% endif %}
             </div>
             <div class="form-group">
+                {{form.action_necessary.label(class="form-control-label")}} <br>
+
+                {% if form.action_necessary.errors %}
+                {% for subfield in form.action_necessary %}
+                <tr class="form-control form-control-lg">
+                    <td>{{ subfield }}</td>
+                    <td>{{ subfield.label }}</td>
+                </tr>
+                {% endfor %}
+                <div class="invalid-feedback">
+                    {% for error in form.action_necessary.errors %}
+                    <span>
+                        {{ error }}
+                    </span>
+                    {% endfor%}
+                </div>
+                {% else %}
+                {% for subfield in form.action_necessary %}
+                <tr class="form-control form-control-lg">
+                    <td>{{ subfield }}</td>
+                    <td>{{ subfield.label }}</td>
+                </tr>
+                {% endfor %}
+
+                {% endif %}
+            </div>
+            <div class="form-group">
                 {{form.date.label(class="form-control-label")}}
 
                 {% if form.date.errors %}

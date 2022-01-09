@@ -2,6 +2,7 @@ from tracker import db
 from tracker.models import Tracker, Application, Event
 from datetime import datetime
 
+
 tracker1 = Tracker(
     name="Fall 2021",
     desc="Applications for summer 2022 internships",
@@ -16,9 +17,10 @@ tracker1 = Tracker(
             event_history=[
                 Event(
                     event_id="5",
-                    desc="rejected",
+                    desc="Rejected",
                     from_me=True,
-                    date=datetime.utcnow(),
+                    action_necessary=False,
+                    date=datetime(2022, 1, 6),
                     of_application="3",
                 )
             ],
@@ -41,16 +43,18 @@ tracker2 = Tracker(
             event_history=[
                 Event(
                     event_id="1",
-                    desc="applied",
+                    desc="Applied",
                     from_me=True,
-                    date=datetime.utcnow(),
+                    action_necessary=False,
+                    date=datetime(2021, 12, 5),
                     of_application="0",
                 ),
                 Event(
                     event_id="2",
-                    desc="rejected",
+                    desc="Rejected",
                     from_me=False,
-                    date=datetime.utcnow(),
+                    action_necessary=False,
+                    date=datetime(2022, 1, 3),
                     of_application="0",
                 ),
             ],
@@ -68,7 +72,8 @@ tracker2 = Tracker(
                     event_id="7",
                     desc="rejected",
                     from_me=False,
-                    date=datetime.utcnow(),
+                    action_necessary=False,
+                    date=datetime(2020, 10, 4),
                     of_application="1",
                 )
             ],
