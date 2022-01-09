@@ -7,7 +7,7 @@
         </h5>
     </div>
     <div class="col-3 align-self-center" align="right">
-        <a class="btn btn-success"
+        <a class="btn btn-success border border-dark"
             href="{{ url_for('addNewApplication', tracker_nameid = tracker.name | to_nameid ) }}">Add New Application <i
                 class="bi bi-pencil-square"></i></a>
     </div>
@@ -27,7 +27,7 @@
         </thead>
         <tbody>
             {% for app in tracker.applications | filterAppsNeedAction %}
-            <tr>
+            <tr class="{{app | daysSinceUpdate | toBootstrapColor}}">
                 <td>{{ app.company_name }}</td>
                 <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
                     {% else %} {{app.position_name}}
@@ -35,16 +35,16 @@
                 <td>{{app.status}}</td>
                 <td>{{app | timeSinceUpdate | formattimedelta }}</td>
                 <td align="right">
-                    <a class="btn btn-success btn-sm px-3 mx-1"
+                    <a class="btn btn-success btn-sm px-3 mx-1 border border-dark"
                         href="{{url_for('addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
                             class="bi bi-plus-lg"></i> Add History</a>
-                    <a class="btn btn-primary btn-sm px-4 mx-1"
+                    <a class="btn btn-primary btn-sm px-4 mx-1 border border-dark"
                         href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
                         History</a>
-                    <a class="btn btn-warning btn-sm px-4 mx-1"
+                    <a class="btn btn-warning btn-sm px-4 mx-1 border border-dark"
                         href="{{url_for('editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
                         <i class="bi bi-pencil-fill"></i> </a>
-                    <a class="btn btn-danger btn-sm mx-1"
+                    <a class="btn btn-danger btn-sm mx-1 border border-dark"
                         href="{{url_for('deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
                         <i class="bi bi-trash"></i> </a>
                 </td>
@@ -68,7 +68,7 @@
         </thead>
         <tbody>
             {% for app in tracker.applications | filterAppsStillValid %}
-            <tr>
+            <tr">
                 <td>{{ app.company_name }}</td>
                 <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
                     {% else %} {{app.position_name}}
@@ -76,21 +76,21 @@
                 <td>{{app.status}}</td>
                 <td>{{app | timeSinceUpdate | formattimedelta }}</td>
                 <td align="right">
-                    <a class="btn btn-success btn-sm px-3 mx-1"
+                    <a class="btn btn-success btn-sm px-3 mx-1 border border-dark"
                         href="{{url_for('addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
                             class="bi bi-plus-lg"></i> Add History</a>
-                    <a class="btn btn-primary btn-sm px-4 mx-1"
+                    <a class="btn btn-primary btn-sm px-4 mx-1 border border-dark"
                         href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
                         History</a>
-                    <a class="btn btn-warning btn-sm px-4 mx-1"
+                    <a class="btn btn-warning btn-sm px-4 mx-1 border border-dark"
                         href="{{url_for('editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
                         <i class="bi bi-pencil-fill"></i> </a>
-                    <a class="btn btn-danger btn-sm mx-1"
+                    <a class="btn btn-danger btn-sm mx-1 border border-dark"
                         href="{{url_for('deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
                         <i class="bi bi-trash"></i> </a>
                 </td>
-            </tr>
-            {% endfor %}
+                </tr>
+                {% endfor %}
         </tbody>
     </table>
 </div>
@@ -109,7 +109,7 @@
         </thead>
         <tbody>
             {% for app in tracker.applications | filterAppsOther %}
-            <tr>
+            <tr">
                 <td>{{ app.company_name }}</td>
                 <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
                     {% else %} {{app.position_name}}
@@ -117,21 +117,21 @@
                 <td>{{app.status}}</td>
                 <td>{{app | timeSinceUpdate | formattimedelta }}</td>
                 <td align="right">
-                    <a class="btn btn-success btn-sm px-3 mx-1"
+                    <a class="btn btn-success btn-sm px-3 mx-1 border border-dark"
                         href="{{url_for('addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
                             class="bi bi-plus-lg"></i> Add History</a>
-                    <a class="btn btn-primary btn-sm px-4 mx-1"
+                    <a class="btn btn-primary btn-sm px-4 mx-1 border border-dark"
                         href="{{url_for('oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
                         History</a>
-                    <a class="btn btn-warning btn-sm px-4 mx-1"
+                    <a class="btn btn-warning btn-sm px-4 mx-1 border border-dark"
                         href="{{url_for('editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
                         <i class="bi bi-pencil-fill"></i> </a>
-                    <a class="btn btn-danger btn-sm mx-1"
+                    <a class="btn btn-danger btn-sm mx-1 border border-dark"
                         href="{{url_for('deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
                         <i class="bi bi-trash"></i> </a>
                 </td>
-            </tr>
-            {% endfor %}
+                </tr>
+                {% endfor %}
         </tbody>
     </table>
 </div>

@@ -16,6 +16,7 @@ if __DEBUG__:
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tracker-test.db"
 else:
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tracker.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 Breadcrumbs(app=app)

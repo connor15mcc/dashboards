@@ -46,6 +46,22 @@ def timeSinceUpdate(a: Application) -> datetime:
         return None
 
 
+@app.template_filter("daysSinceUpdate")
+def daysSinceUpdate(a: Application) -> int:
+    return timeSinceUpdate(a).days
+
+
+@app.template_filter("toBootstrapColor")
+def toBootstrapColor(i: int) -> str:
+    range = 12
+    result = ""
+    if i > range // 2:
+        result = "bg-danger"
+    elif i > range // 4:
+        result = "bg-warning"
+    return result
+
+
 @app.template_filter("sortedEvents")
 def sortedEvents(a: Application) -> List[Event]:
     result = sorted(a.event_history, key=lambda x: datetime.now() - x.date)
