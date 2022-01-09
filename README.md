@@ -5,13 +5,15 @@ Creating a Python project to facilitate the tracking of applications in a shift 
 Following my recruitment for Summer '22 during the Fall of 2021 (my junior year), I wanted to gain additional insight and clarity into the recruiting progress as well as gain experience with a large (r than leetcode) sized Python project.
 
 ## Eventual Goals
-- Ability to add new applications easily
-- Ability to edit the progress of existing applications
-- Ability to delete applications/trackers/events
-- Relevant information available easily, additional information able to be input via menus
-- Ability to gain insight/data on the progression of applications on a large scale and extract to visualizations
-- Ability to control via webpage
-- Ability to autogenerate cover letters
+- [x] Ability to add new applications easily
+- [x] Ability to edit the progress of existing applications
+- [x] Ability to delete applications/trackers/events
+- [x] Ability to control via webpage
+- [ ] Display information on number of applications, success rate, breakdown of status, etc
+- [ ] Ability to autogenerate cover letters
+  - [ ] Find API/way to find HQ based on company names (or self supply)
+  - [ ] Ability to generate latex file systematically from parameters
+- [ ] Ability to gain insight/data on the progression of applications on a large scale and extract to visualizations
 
 ## Tips
 - You should create a `.env` file with `SECRET_KEY=your_key_here`
