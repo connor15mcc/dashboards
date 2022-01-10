@@ -17,3 +17,4 @@ Following my recruitment for Summer '22 during the Fall of 2021 (my junior year)
 
 ## Tips
 - You should create a `.env` file with `SECRET_KEY=your_key_here`
+- Passing any arguments to `launch.py` will launch the program in debug mode

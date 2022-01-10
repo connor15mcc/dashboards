@@ -12,7 +12,7 @@
     </div>
     <div class="col-3 align-self-center" align="right">
         <a class="btn btn-success border border-dark"
-            href="{{ url_for('addNewEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid , app_id = application.application_id) }}">Add
+            href="{{ url_for('events.addNewEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid , app_id = application.application_id) }}">Add
             New Event <i class="bi bi-pencil-square"></i></a>
     </div>
 </div>
@@ -34,10 +34,10 @@
                 <td> {% if event.from_me %} Me {% else %} Them {% endif %}</td>
                 <td>{{ event.date|formatdatetime }}</td>
                 <td align="right"><a class="btn btn-warning btn-sm px-4 mx-2 border border-dark"
-                        href="{{url_for('editEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid, app_id = application.application_id, event_id = event.event_id) }}">
+                        href="{{url_for('events.editEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid, app_id = application.application_id, event_id = event.event_id) }}">
                         <i class="bi bi-pencil-fill"></i> </a>
                     <a class="btn btn-danger btn-sm mx-2 border border-dark"
-                        href="{{url_for('deleteEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid, app_id = application.application_id, event_id = event.event_id) }}">
+                        href="{{url_for('events.deleteEvent', tracker_nameid = application.of_tracker | to_nameid_from_trackerid, app_id = application.application_id, event_id = event.event_id) }}">
                         <i class="bi bi-trash"></i> </a>
                 </td>
             </tr>

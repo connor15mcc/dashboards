@@ -8,7 +8,7 @@
         </h5>
     </div>
     <div class="col-3 align-self-center" align="right">
-        <a class="btn btn-success border border-dark" href="{{ url_for('addNewTracker') }}">Add New
+        <a class="btn btn-success border border-dark" href="{{ url_for('trackers.addNewTracker') }}">Add New
             Tracker <i class="bi bi-pencil-square"></i></a>
     </div>
 </div>
@@ -36,10 +36,10 @@
                         href="{{ tracker.name | to_nameid }}">
                         View Applications </a>
                     <a class="btn btn-warning btn-sm px-4 mx-2 border border-dark"
-                        href="{{ url_for('editTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> <i
+                        href="{{ url_for('trackers.editTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> <i
                             class="bi bi-pencil-fill"></i></a>
                     <a class="btn btn-danger btn-sm mx-2 border border-dark"
-                        href="{{ url_for('deleteTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> <i
+                        href="{{ url_for('trackers.deleteTracker', tracker_nameid = (tracker.name | to_nameid) ) }}"> <i
                             class="bi bi-trash"></i></a>
                 </td>
             </tr>

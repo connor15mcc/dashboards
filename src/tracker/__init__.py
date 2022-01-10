@@ -2,27 +2,33 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_breadcrumbs import Breadcrumbs
 from flask_scss import Scss
-import os
-from dotenv import load_dotenv
+from tracker.config import Config, ConfigTest
 
-__DEBUG__ = True
 
-# https://testdriven.io/courses/learn-flask/
-app = Flask(__name__)
+db = SQLAlchemy()
 
-load_dotenv()
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "for dev")
-if __DEBUG__:
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tracker-test.db"
-else:
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tracker.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
 
-Breadcrumbs(app=app)
+def create_app(testing):
+    app = Flask(__name__)
+    if testing:
+        app.config.from_object(ConfigTest)
+    else:
+        app.config.from_object(Config)
 
-app.debug = __DEBUG__
-Scss(app)
+    db.init_app(app)
+    Breadcrumbs(app)
+    Scss(app)
 
-if not __DEBUG__:
-    os.startfile("http://localhost:5000")
+    from tracker.main.routes import main  # noqa: E402
+    from tracker.applications.routes import applications  # noqa: E402
+    from tracker.events.routes import events  # noqa: E402
+    from tracker.trackers.routes import trackers  # noqa: E402
+    from tracker.filters.filters import filters  # noqa: E402
+
+    app.register_blueprint(main)
+    app.register_blueprint(applications)
+    app.register_blueprint(events)
+    app.register_blueprint(trackers)
+    app.register_blueprint(filters)
+
+    return app
