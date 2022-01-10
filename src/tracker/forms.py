@@ -83,7 +83,7 @@ class EditApplication(FlaskForm):
     status = SelectField(
         "Status",
         choices=[
-            ("Found", "Found"),
+            ("Initialized", "Initialized"),
             ("Applied", "Applied"),
             ("Accepted", "Accepted"),
             ("Rejected", "Rejected"),

@@ -39,7 +39,7 @@ def allTrackers():
 @register_breadcrumb(app, ".tracker", "Tracker")
 def oneTracker(tracker_nameid):
     trackerName = to_name(tracker_nameid)
-    (correctTracker,) = Tracker.query.filter_by(name=trackerName).all()
+    correctTracker = Tracker.query.filter_by(name=trackerName).first_or_404()
     return render_template(
         "tracker.html",
         title=correctTracker.name,
@@ -54,7 +54,9 @@ def oneTracker(tracker_nameid):
     "Application",
 )
 def oneApplication(tracker_nameid, app_id):
-    (correctApplication,) = Application.query.filter_by(application_id=app_id).all()
+    correctApplication = Application.query.filter_by(
+        application_id=app_id
+    ).first_or_404()
     return render_template(
         "application.html",
         title=correctApplication.company_name,
@@ -80,7 +82,9 @@ def addNewTracker():
 def addNewApplication(tracker_nameid):
     form = NewApplication()
     if form.validate_on_submit():
-        (correctTracker,) = Tracker.query.filter_by(name=to_name(tracker_nameid)).all()
+        correctTracker = Tracker.query.filter_by(
+            name=to_name(tracker_nameid)
+        ).first_or_404()
         application = Application(
             company_name=form.company_name.data,
             position_name=form.position_name.data,
@@ -111,7 +115,9 @@ def addNewEvent(tracker_nameid, app_id):
     form = NewEvent()
     print(type(form.date.data))
     if form.validate_on_submit():
-        (correctApplication,) = Application.query.filter_by(application_id=app_id).all()
+        correctApplication = Application.query.filter_by(
+            application_id=app_id
+        ).first_or_404()
         event = Event(
             desc=form.desc.data,
             from_me=form.from_me.data,
@@ -132,7 +138,9 @@ def addNewEvent(tracker_nameid, app_id):
 @app.route("/trackers/<tracker_nameid>/edit", methods=["GET", "POST"])
 @register_breadcrumb(app, ".edit", "Edit Tracker")
 def editTracker(tracker_nameid):
-    (currentTracker,) = Tracker.query.filter_by(name=to_name(tracker_nameid)).all()
+    currentTracker = Tracker.query.filter_by(
+        name=to_name(tracker_nameid)
+    ).first_or_404()
     form = EditTracker()
     if form.validate_on_submit():
         currentTracker.name = to_name(to_nameid(form.name.data))
@@ -149,7 +157,9 @@ def editTracker(tracker_nameid):
 @app.route("/trackers/<tracker_nameid>/<app_id>/edit", methods=["GET", "POST"])
 @register_breadcrumb(app, ".tracker.edit", "Edit Application")
 def editApplication(tracker_nameid, app_id):
-    (currentApplication,) = Application.query.filter_by(application_id=app_id).all()
+    currentApplication = Application.query.filter_by(
+        application_id=app_id
+    ).first_or_404()
     form = EditApplication()
     if form.validate_on_submit():
         currentApplication.company_name = form.company_name.data
@@ -175,10 +185,12 @@ def editApplication(tracker_nameid, app_id):
 @app.route("/tracker/<tracker_nameid>/<app_id>/<event_id>", methods=["GET", "POST"])
 @register_breadcrumb(app, ".tracker.application.edit", "Edit Event")
 def editEvent(tracker_nameid, app_id, event_id):
-    (currentEvent,) = Event.query.filter_by(event_id=event_id).all()
+    currentEvent = Event.query.filter_by(event_id=event_id).first_or_404()
     form = EditEvent()
     if form.validate_on_submit():
-        (correctApplication,) = Application.query.filter_by(application_id=app_id).all()
+        correctApplication = Application.query.filter_by(
+            application_id=app_id
+        ).first_or_404()
         updateStatus(correctApplication, form.desc.data)
         db.session.commit()
 
@@ -204,7 +216,9 @@ def editEvent(tracker_nameid, app_id, event_id):
 
 @app.route("/tracker/<tracker_nameid>/delete", methods=["GET"])
 def deleteTracker(tracker_nameid):
-    (currentTracker,) = Tracker.query.filter_by(name=to_name(tracker_nameid)).all()
+    currentTracker = Tracker.query.filter_by(
+        name=to_name(tracker_nameid)
+    ).first_or_404()
     for application in currentTracker.applications:
         deleteApplication(tracker_nameid, application.application_id)
     session["_flashes"].clear()
@@ -216,7 +230,9 @@ def deleteTracker(tracker_nameid):
 
 @app.route("/tracker/<tracker_nameid>/<app_id>/delete", methods=["GET"])
 def deleteApplication(tracker_nameid, app_id):
-    (currentApplication,) = Application.query.filter_by(application_id=app_id).all()
+    currentApplication = Application.query.filter_by(
+        application_id=app_id
+    ).first_or_404()
     for event in currentApplication.event_history:
         deleteEvent(tracker_nameid, app_id, event.event_id)
     session["_flashes"].clear()
@@ -228,7 +244,7 @@ def deleteApplication(tracker_nameid, app_id):
 
 @app.route("/tracker/<tracker_nameid>/<app_id>/<event_id>/delete", methods=["GET"])
 def deleteEvent(tracker_nameid, app_id, event_id):
-    (currentEvent,) = Event.query.filter_by(event_id=event_id).all()
+    currentEvent = Event.query.filter_by(event_id=event_id).first_or_404()
     db.session.delete(currentEvent)
     db.session.commit()
     flash("This event has been deleted", "success")

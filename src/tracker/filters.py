@@ -64,7 +64,7 @@ def toBootstrapColor(i: int) -> str:
 
 @app.template_filter("sortedEvents")
 def sortedEvents(a: Application) -> List[Event]:
-    result = sorted(a.event_history, key=lambda x: datetime.now() - x.date)
+    result = sorted(a.event_history, key=lambda e: datetime.now() - e.date)
     return result
 
 
@@ -89,3 +89,21 @@ def filterAppsStillValid(apps: List[Application]) -> List[Application]:
 @app.template_filter("filterAppsOther")
 def filterAppsOther(apps: List[Application]) -> List[Application]:
     return [a for a in apps if a.status == "Rejected"]
+
+
+@app.template_filter("sortApps")
+def sortApps(apps: List[Application]) -> List[Application]:
+    result = sorted(apps, key=lambda a: -daysSinceUpdate(a))
+    return result
+
+
+@app.template_filter("totalAwaitingAction")
+def totalAwaitingAction(t: Tracker) -> int:
+    apps = filterAppsNeedAction(t.applications)
+    return len(apps)
+
+
+@app.template_filter("totalApplications")
+def totalApplications(t: Tracker) -> int:
+    apps = t.applications
+    return len(apps)

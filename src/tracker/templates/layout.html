@@ -25,9 +25,9 @@
 
 <body>
     <div class="content">
-        <nav class="bg-dark" aria-label="breadcrumb">
+        <nav class="breadcrumb-nav" aria-label="breadcrumb">
             <div style=height:2%;>
-                <ol class="breadcrumb bg-dark">
+                <ol class="breadcrumb breadcrumb-nav">
                     {% for breadcrumb in breadcrumbs %}
                     {% if not loop.last %}
                     <li class="breadcrumb-item"><a class="text-light" href="{{ breadcrumb.url }}">{{ breadcrumb.text
@@ -58,9 +58,9 @@
         </main>
     </div>
 
-    <footer class="footer bg-dark">
+    <footer class="footer">
         <div class="container">
-            <span class="text-light">Job Application Tracker, courtesy of Connor McCarthy</span>
+            <span class="">Job Application Tracker, courtesy of Connor McCarthy</span>
         </div>
     </footer>
 

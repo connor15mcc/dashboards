@@ -14,7 +14,6 @@
 </div>
 <br>
 <div style="overflow-x:auto;">
-    <h5>Action Needed:</h5>
     <table id="data" class="table table-sm table-hover">
         <thead>
             <tr>
@@ -26,7 +25,10 @@
             </tr>
         </thead>
         <tbody>
-            {% for app in tracker.applications | filterAppsNeedAction %}
+            <tr class=tracker-category-label>
+                <th colspan="5">Action Required:</th>
+            </tr>
+            {% for app in tracker.applications | sortApps | filterAppsNeedAction %}
             <tr class="{{app | daysSinceUpdate | toBootstrapColor}}">
                 <td>{{ app.company_name }}</td>
                 <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
@@ -51,23 +53,11 @@
             </tr>
             {% endfor %}
         </tbody>
-    </table>
-</div>
-<br>
-<div style="overflow-x:auto;">
-    <h5>No Action Needed:</h5>
-    <table id="data" class="table table-sm table-hover">
-        <thead>
-            <tr>
-                <th>Company Name</th>
-                <th>Position</th>
-                <th>Status</th>
-                <th>Time Since</th>
-                <th></th>
-            </tr>
-        </thead>
         <tbody>
-            {% for app in tracker.applications | filterAppsStillValid %}
+            <tr class=tracker-category-label>
+                <th colspan="5">No Action Required:</th>
+            </tr>
+            {% for app in tracker.applications | sortApps | filterAppsStillValid %}
             <tr">
                 <td>{{ app.company_name }}</td>
                 <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
@@ -92,23 +82,11 @@
                 </tr>
                 {% endfor %}
         </tbody>
-    </table>
-</div>
-<br>
-<div style="overflow-x:auto;">
-    <h5>No Longer In Consideration:</h5>
-    <table id="data" class="table table-sm table-hover">
-        <thead>
-            <tr>
-                <th>Company Name</th>
-                <th>Position</th>
-                <th>Status</th>
-                <th>Time Since</th>
-                <th></th>
-            </tr>
-        </thead>
         <tbody>
-            {% for app in tracker.applications | filterAppsOther %}
+            <tr class=tracker-category-label>
+                <th colspan="5">No Longer in Consideration:</th>
+            </tr>
+            {% for app in tracker.applications | sortApps | filterAppsOther %}
             <tr">
                 <td>{{ app.company_name }}</td>
                 <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>

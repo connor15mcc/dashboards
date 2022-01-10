@@ -23,3 +23,6 @@ Breadcrumbs(app=app)
 
 app.debug = __DEBUG__
 Scss(app)
+
+if not __DEBUG__:
+    os.startfile("http://localhost:5000")
