@@ -24,11 +24,13 @@ def create_app(testing):
     from tracker.events.routes import events  # noqa: E402
     from tracker.trackers.routes import trackers  # noqa: E402
     from tracker.filters.filters import filters  # noqa: E402
+    from tracker.errors.handlers import errors  # noqa: E402
 
     app.register_blueprint(main)
     app.register_blueprint(applications)
     app.register_blueprint(events)
     app.register_blueprint(trackers)
     app.register_blueprint(filters)
+    app.register_blueprint(errors)
 
     return app

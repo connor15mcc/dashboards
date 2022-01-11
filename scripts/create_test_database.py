@@ -1,4 +1,4 @@
-from tracker import db
+from tracker import db, create_app
 from tracker.models import Tracker, Application, Event
 from datetime import datetime
 
@@ -82,8 +82,11 @@ tracker2 = Tracker(
     ],
 )
 
-db.drop_all()
-db.create_all()
-db.session.add(tracker1)
-db.session.add(tracker2)
-db.session.commit()
+
+app = create_app(True)
+with app.app_context():
+    db.drop_all()
+    db.create_all()
+    db.session.add(tracker1)
+    db.session.add(tracker2)
+    db.session.commit()
