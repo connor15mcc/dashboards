@@ -1,11 +1,11 @@
-from tracker import db, create_app
-from tracker.models import Tracker, Application, Event
+from dashboards import db, create_app
+from dashboards.models import Tracker, Application, Event
 from datetime import datetime
 
 
 tracker1 = Tracker(
-    name="Fall 2021",
-    desc="Applications for summer 2022 internships",
+    name="Testing 2021",
+    desc="Testing applications for summer 2022 internships",
     applications=[
         Application(
             application_id="3",
@@ -30,8 +30,8 @@ tracker1 = Tracker(
 )
 
 tracker2 = Tracker(
-    name="Fall 2022",
-    desc="Applications for full-time employment",
+    name="Testing 2022",
+    desc="Testing applications for full-time employment",
     applications=[
         Application(
             application_id="0",

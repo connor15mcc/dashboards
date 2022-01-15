@@ -8,4 +8,4 @@ default_breadcrumb_root(main, ".")
 
 @main.route("/")
 def root():
-    return redirect(url_for("trackers.allTrackers"))
+    return redirect(url_for("application-tracker.trackers.allTrackers"))

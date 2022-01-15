@@ -1,4 +1,4 @@
-from tracker.models import Tracker, Application, Event
+from dashboards.models import Tracker, Application, Event
 from flask import Blueprint
 from datetime import datetime
 from typing import List
