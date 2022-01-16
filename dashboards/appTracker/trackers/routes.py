@@ -1,25 +1,33 @@
 from flask import Blueprint
 from flask import redirect, url_for, render_template, flash, request, session
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
-from tracker.trackers.forms import NewTracker, EditTracker
-from tracker.applications.routes import deleteApplication
-from tracker.models import Tracker
-from tracker.filters.filters import to_name, to_nameid
-from tracker import db
+from flask_login import current_user
+from dashboards.appTracker.trackers.forms import NewTracker, EditTracker
+from dashboards.appTracker.applications.routes import deleteApplication
+from dashboards.models import Tracker
+from dashboards.appTracker.filters.filters import to_name, to_nameid
+from dashboards import db
+
 
 trackers = Blueprint("trackers", __name__)
 default_breadcrumb_root(trackers, ".")
 
 
-@trackers.route("/trackers/")
+@trackers.before_request
+def restrict_trackers_to_users():
+    if not current_user.is_authenticated:
+        return redirect(url_for("main.homepage"))
+
+
+@trackers.route("/")
 @register_breadcrumb(trackers, ".", "Home")
 def allTrackers():
     return render_template(
-        "trackers.html", title="Trackers", trackers=Tracker.query.all()
+        "appTracker/trackers.html", title="Trackers", trackers=Tracker.query.all()
     )
 
 
-@trackers.route("/trackers/add_new", methods=["GET", "POST"])
+@trackers.route("/add_new", methods=["GET", "POST"])
 @register_breadcrumb(trackers, ".add_new", "Add New Tracker")
 def addNewTracker():
     form = NewTracker()
@@ -29,10 +37,12 @@ def addNewTracker():
         db.session.commit()
         flash(f"New Tracker added for {tracker.name}!", "success")
         return redirect(url_for("trackers.allTrackers"))
-    return render_template("new_tracker.html", title="New Tracker", form=form)
+    return render_template(
+        "appTracker/new_tracker.html", title="New Tracker", form=form
+    )
 
 
-@trackers.route("/trackers/<tracker_nameid>/edit", methods=["GET", "POST"])
+@trackers.route("/<tracker_nameid>/edit", methods=["GET", "POST"])
 @register_breadcrumb(trackers, ".edit", "Edit Tracker")
 def editTracker(tracker_nameid):
     currentTracker = Tracker.query.filter_by(
@@ -48,7 +58,9 @@ def editTracker(tracker_nameid):
     elif request.method == "GET":
         form.name.data = currentTracker.name
         form.desc.data = currentTracker.desc
-    return render_template("edit_tracker.html", title="Edit Tracker", form=form)
+    return render_template(
+        "appTracker/edit_tracker.html", title="Edit Tracker", form=form
+    )
 
 
 @trackers.route("/tracker/<tracker_nameid>/delete", methods=["GET"])

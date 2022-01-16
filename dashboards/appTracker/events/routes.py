@@ -1,18 +1,25 @@
 from flask import Blueprint
 from flask import redirect, url_for, render_template, flash, request
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
-from tracker.events.forms import NewEvent, EditEvent
-from tracker.events.utils import updateStatus
-from tracker.models import Application, Event
-from tracker.filters.filters import format_datetime
-from tracker import db
+from flask_login import current_user
+from dashboards.appTracker.events.forms import NewEvent, EditEvent
+from dashboards.appTracker.events.utils import updateStatus
+from dashboards.models import Application, Event
+from dashboards.appTracker.filters.filters import format_datetime
+from dashboards import db
 
 
 events = Blueprint("events", __name__)
 default_breadcrumb_root(events, ".")
 
 
-@events.route("/trackers/<tracker_nameid>/<app_id>")
+@events.before_request
+def restrict_events_to_users():
+    if not current_user.is_authenticated:
+        return redirect(url_for("main.homepage"))
+
+
+@events.route("/<tracker_nameid>/<app_id>")
 @register_breadcrumb(
     events,
     ".tracker.application",
@@ -23,13 +30,13 @@ def oneApplication(tracker_nameid, app_id):
         application_id=app_id
     ).first_or_404()
     return render_template(
-        "application.html",
+        "appTracker/application.html",
         title=correctApplication.company_name,
         application=correctApplication,
     )
 
 
-@events.route("/trackers/<tracker_nameid>/<app_id>/add_new", methods=["GET", "POST"])
+@events.route("/<tracker_nameid>/<app_id>/add_new", methods=["GET", "POST"])
 @register_breadcrumb(events, ".tracker.application.add_new", "Add New Event")
 def addNewEvent(tracker_nameid, app_id):
     form = NewEvent()
@@ -54,7 +61,7 @@ def addNewEvent(tracker_nameid, app_id):
                 "events.oneApplication", tracker_nameid=tracker_nameid, app_id=app_id
             )
         )
-    return render_template("new_event.html", title="New Event", form=form)
+    return render_template("appTracker/new_event.html", title="New Event", form=form)
 
 
 @events.route("/tracker/<tracker_nameid>/<app_id>/<event_id>", methods=["GET", "POST"])
@@ -88,7 +95,7 @@ def editEvent(tracker_nameid, app_id, event_id):
         form.from_me.data = currentEvent.from_me
         form.action_necessary.data = currentEvent.action_necessary
         form.date.data = currentEvent.date
-    return render_template("edit_event.html", title="Edit Event", form=form)
+    return render_template("appTracker/edit_event.html", title="Edit Event", form=form)
 
 
 @events.route("/tracker/<tracker_nameid>/<app_id>/<event_id>/delete", methods=["GET"])

@@ -1,4 +1,4 @@
-from tracker.models import Application
+from dashboards.models import Application
 
 
 def updateStatus(a: Application, formData: str) -> None:

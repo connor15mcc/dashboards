@@ -1,4 +1,4 @@
-from tracker import create_app
+from dashboards import create_app
 import sys
 import os
 
