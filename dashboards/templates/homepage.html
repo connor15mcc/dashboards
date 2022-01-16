@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2><a href="application-tracker">View the application tracker</a></h2>
+{{ display_widget("Application Tracker", url_for('trackers.allTrackers') ) }}
 
 {% endblock content %}
+
+{% macro display_widget(name, link) %}
+<h2><a href="{{ link }}"">View {{ name }}!</a></h2>
+{% endmacro %}

@@ -10,7 +10,7 @@ from dashboards import db
 
 
 trackers = Blueprint("trackers", __name__)
-default_breadcrumb_root(trackers, ".")
+default_breadcrumb_root(trackers, ".appTracker")
 
 
 @trackers.before_request
@@ -20,10 +20,12 @@ def restrict_trackers_to_users():
 
 
 @trackers.route("/")
-@register_breadcrumb(trackers, ".", "Home")
+@register_breadcrumb(trackers, ".", "Trackers")
 def allTrackers():
     return render_template(
-        "appTracker/trackers.html", title="Trackers", trackers=Tracker.query.all()
+        "appTracker/trackers.html",
+        title="Application Tracker - " + "Trackers",
+        trackers=Tracker.query.all(),
     )
 
 
@@ -38,7 +40,9 @@ def addNewTracker():
         flash(f"New Tracker added for {tracker.name}!", "success")
         return redirect(url_for("trackers.allTrackers"))
     return render_template(
-        "appTracker/new_tracker.html", title="New Tracker", form=form
+        "appTracker/new_tracker.html",
+        title="Application Tracker - " + "New Tracker",
+        form=form,
     )
 
 
@@ -59,7 +63,9 @@ def editTracker(tracker_nameid):
         form.name.data = currentTracker.name
         form.desc.data = currentTracker.desc
     return render_template(
-        "appTracker/edit_tracker.html", title="Edit Tracker", form=form
+        "appTracker/edit_tracker.html",
+        title="Application Tracker - " + "Edit Tracker",
+        form=form,
     )
 
 

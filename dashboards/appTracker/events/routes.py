@@ -10,7 +10,7 @@ from dashboards import db
 
 
 events = Blueprint("events", __name__)
-default_breadcrumb_root(events, ".")
+default_breadcrumb_root(events, ".appTracker.tracker.application")
 
 
 @events.before_request
@@ -22,7 +22,7 @@ def restrict_events_to_users():
 @events.route("/<tracker_nameid>/<app_id>")
 @register_breadcrumb(
     events,
-    ".tracker.application",
+    ".",
     "Application",
 )
 def oneApplication(tracker_nameid, app_id):
@@ -31,13 +31,13 @@ def oneApplication(tracker_nameid, app_id):
     ).first_or_404()
     return render_template(
         "appTracker/application.html",
-        title=correctApplication.company_name,
+        title="Application Tracker - " + correctApplication.company_name,
         application=correctApplication,
     )
 
 
 @events.route("/<tracker_nameid>/<app_id>/add_new", methods=["GET", "POST"])
-@register_breadcrumb(events, ".tracker.application.add_new", "Add New Event")
+@register_breadcrumb(events, ".add_new", "Add New Event")
 def addNewEvent(tracker_nameid, app_id):
     form = NewEvent()
     print(type(form.date.data))
@@ -61,11 +61,15 @@ def addNewEvent(tracker_nameid, app_id):
                 "events.oneApplication", tracker_nameid=tracker_nameid, app_id=app_id
             )
         )
-    return render_template("appTracker/new_event.html", title="New Event", form=form)
+    return render_template(
+        "appTracker/new_event.html",
+        title="Application Tracker - " + "New Event",
+        form=form,
+    )
 
 
 @events.route("/tracker/<tracker_nameid>/<app_id>/<event_id>", methods=["GET", "POST"])
-@register_breadcrumb(events, ".tracker.application.edit", "Edit Event")
+@register_breadcrumb(events, ".edit", "Edit Event")
 def editEvent(tracker_nameid, app_id, event_id):
     currentEvent = Event.query.filter_by(event_id=event_id).first_or_404()
     form = EditEvent()
@@ -95,7 +99,11 @@ def editEvent(tracker_nameid, app_id, event_id):
         form.from_me.data = currentEvent.from_me
         form.action_necessary.data = currentEvent.action_necessary
         form.date.data = currentEvent.date
-    return render_template("appTracker/edit_event.html", title="Edit Event", form=form)
+    return render_template(
+        "appTracker/edit_event.html",
+        title="Application Tracker - " + "Edit Event",
+        form=form,
+    )
 
 
 @events.route("/tracker/<tracker_nameid>/<app_id>/<event_id>/delete", methods=["GET"])
