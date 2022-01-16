@@ -12,7 +12,7 @@ events = Blueprint("events", __name__)
 default_breadcrumb_root(events, ".")
 
 
-@events.route("/trackers/<tracker_nameid>/<app_id>")
+@events.route("/<tracker_nameid>/<app_id>")
 @register_breadcrumb(
     events,
     ".tracker.application",
@@ -29,7 +29,7 @@ def oneApplication(tracker_nameid, app_id):
     )
 
 
-@events.route("/trackers/<tracker_nameid>/<app_id>/add_new", methods=["GET", "POST"])
+@events.route("/<tracker_nameid>/<app_id>/add_new", methods=["GET", "POST"])
 @register_breadcrumb(events, ".tracker.application.add_new", "Add New Event")
 def addNewEvent(tracker_nameid, app_id):
     form = NewEvent()

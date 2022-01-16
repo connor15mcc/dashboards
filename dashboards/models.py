@@ -2,21 +2,22 @@ from datetime import datetime
 from dashboards import db
 
 
-# class User(db.Model):
-#     user_id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String, unique=True, nullable=False)
-#     password = db.Column(db.String, nullable=False)
-#     trackers = db.relationship("Tracker", backref="user", lazy=True)
+class User(db.Model):
+    user_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, unique=True, nullable=False)
+    password = db.Column(db.String, nullable=False)
+    trackers = db.relationship("Tracker", backref="user", lazy=True)
 
-#     def __repr__(self):
-#         return f"User('{self.user_id}', {self.username})'"
+
+def __repr__(self):
+    return f"User('{self.user_id}', {self.username})'"
 
 
 class Tracker(db.Model):
     tracker_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     desc = db.Column(db.String, nullable=False)
-    # of_user = db.Column(db.String, db.ForeignKey("user.user_id"), nullable=False)
+    of_user = db.Column(db.String, db.ForeignKey("user.user_id"), nullable=False)
     applications = db.relationship("Application", backref="tracker", lazy=True)
 
     def __repr__(self):

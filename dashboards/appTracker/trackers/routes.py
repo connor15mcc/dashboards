@@ -11,7 +11,7 @@ trackers = Blueprint("trackers", __name__)
 default_breadcrumb_root(trackers, ".")
 
 
-@trackers.route("/trackers/")
+@trackers.route("/")
 @register_breadcrumb(trackers, ".", "Home")
 def allTrackers():
     return render_template(
@@ -19,7 +19,7 @@ def allTrackers():
     )
 
 
-@trackers.route("/trackers/add_new", methods=["GET", "POST"])
+@trackers.route("/add_new", methods=["GET", "POST"])
 @register_breadcrumb(trackers, ".add_new", "Add New Tracker")
 def addNewTracker():
     form = NewTracker()
@@ -34,7 +34,7 @@ def addNewTracker():
     )
 
 
-@trackers.route("/trackers/<tracker_nameid>/edit", methods=["GET", "POST"])
+@trackers.route("/<tracker_nameid>/edit", methods=["GET", "POST"])
 @register_breadcrumb(trackers, ".edit", "Edit Tracker")
 def editTracker(tracker_nameid):
     currentTracker = Tracker.query.filter_by(

@@ -12,7 +12,7 @@ applications = Blueprint("applications", __name__)
 default_breadcrumb_root(applications, ".")
 
 
-@applications.route("/trackers/<tracker_nameid>/")
+@applications.route("/<tracker_nameid>/")
 @register_breadcrumb(applications, ".tracker", "Tracker")
 def oneTracker(tracker_nameid):
     trackerName = to_name(tracker_nameid)
@@ -24,7 +24,7 @@ def oneTracker(tracker_nameid):
     )
 
 
-@applications.route("/trackers/<tracker_nameid>/add_new", methods=["GET", "POST"])
+@applications.route("/<tracker_nameid>/add_new", methods=["GET", "POST"])
 @register_breadcrumb(applications, ".tracker.add_new", "Add New Application")
 def addNewApplication(tracker_nameid):
     form = NewApplication()
@@ -60,7 +60,7 @@ def addNewApplication(tracker_nameid):
     )
 
 
-@applications.route("/trackers/<tracker_nameid>/<app_id>/edit", methods=["GET", "POST"])
+@applications.route("/<tracker_nameid>/<app_id>/edit", methods=["GET", "POST"])
 @register_breadcrumb(applications, ".tracker.edit", "Edit Application")
 def editApplication(tracker_nameid, app_id):
     currentApplication = Application.query.filter_by(
