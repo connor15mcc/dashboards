@@ -25,6 +25,7 @@ def create_app(testing):
     bcrypt.init_app(app)
     login_manager.init_app(app)
     Breadcrumbs(app)
+    app.debug = testing
     Scss(app)
 
     # Importing Blueprints #

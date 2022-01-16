@@ -1,0 +1,19 @@
+@import './variables.scss';
+
+
+
+.table-hover tbody tr.bg-warning:hover td {
+    background-color: rgb(245,127,23);
+}
+
+
+.table-hover tbody tr.bg-danger:hover td {
+    background-color: rgb(183,28,28);
+}
+
+
+.tracker-category-label {
+    text-align: center;
+    pointer-events: none;
+    line-height: 200%;
+}

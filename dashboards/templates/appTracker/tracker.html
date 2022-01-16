@@ -25,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class=tracker-category-label>
+            <tr class="tracker-category-label bg-primary text-light">
                 <th colspan="5">Action Required:</th>
             </tr>
             {% for app in tracker.applications | sortApps | filterAppsNeedAction %}
@@ -54,7 +54,7 @@
             {% endfor %}
         </tbody>
         <tbody>
-            <tr class=tracker-category-label>
+            <tr class="tracker-category-label bg-primary text-light">
                 <th colspan="5">No Action Required:</th>
             </tr>
             {% for app in tracker.applications | sortApps | filterAppsStillValid %}
@@ -83,7 +83,7 @@
                 {% endfor %}
         </tbody>
         <tbody>
-            <tr class=tracker-category-label>
+            <tr class="tracker-category-label bg-primary text-light">
                 <th colspan="5">No Longer in Consideration:</th>
             </tr>
             {% for app in tracker.applications | sortApps | filterAppsOther %}

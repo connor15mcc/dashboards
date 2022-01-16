@@ -10,7 +10,7 @@ from dashboards import db
 from datetime import datetime
 
 applications = Blueprint("applications", __name__)
-default_breadcrumb_root(applications, ".")
+default_breadcrumb_root(applications, ".appTracker.tracker")
 
 
 @applications.before_request
@@ -20,19 +20,19 @@ def restrict_applications_to_users():
 
 
 @applications.route("/<tracker_nameid>/")
-@register_breadcrumb(applications, ".tracker", "Tracker")
+@register_breadcrumb(applications, ".", "Tracker")
 def oneTracker(tracker_nameid):
     trackerName = to_name(tracker_nameid)
     correctTracker = Tracker.query.filter_by(name=trackerName).first_or_404()
     return render_template(
         "appTracker/tracker.html",
-        title=correctTracker.name,
+        title="Application Tracker - " + correctTracker.name,
         tracker=correctTracker,
     )
 
 
 @applications.route("/<tracker_nameid>/add_new", methods=["GET", "POST"])
-@register_breadcrumb(applications, ".tracker.add_new", "Add New Application")
+@register_breadcrumb(applications, ".add_new", "Add New Application")
 def addNewApplication(tracker_nameid):
     form = NewApplication()
     if form.validate_on_submit():
@@ -63,12 +63,14 @@ def addNewApplication(tracker_nameid):
             url_for("applications.oneTracker", tracker_nameid=tracker_nameid)
         )
     return render_template(
-        "appTracker/new_application.html", title="New Application", form=form
+        "appTracker/new_application.html",
+        title="Application Tracker - " + "New Application",
+        form=form,
     )
 
 
 @applications.route("/<tracker_nameid>/<app_id>/edit", methods=["GET", "POST"])
-@register_breadcrumb(applications, ".tracker.edit", "Edit Application")
+@register_breadcrumb(applications, ".edit", "Edit Application")
 def editApplication(tracker_nameid, app_id):
     currentApplication = Application.query.filter_by(
         application_id=app_id
@@ -95,7 +97,9 @@ def editApplication(tracker_nameid, app_id):
         form.link.data = currentApplication.link
         form.status.data = currentApplication.status
     return render_template(
-        "appTracker/edit_application.html", title="Edit Application", form=form
+        "appTracker/edit_application.html",
+        title="Application Tracker - " + "Edit Application",
+        form=form,
     )
 
 
