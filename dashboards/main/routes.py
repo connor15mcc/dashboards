@@ -7,5 +7,5 @@ default_breadcrumb_root(main, ".")
 
 
 @main.route("/")
-def root():
+def homepage():
     return render_template("homepage.html")

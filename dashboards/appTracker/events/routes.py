@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import redirect, url_for, render_template, flash, request
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
+from flask_login import current_user
 from dashboards.appTracker.events.forms import NewEvent, EditEvent
 from dashboards.appTracker.events.utils import updateStatus
 from dashboards.models import Application, Event
@@ -10,6 +11,12 @@ from dashboards import db
 
 events = Blueprint("events", __name__)
 default_breadcrumb_root(events, ".")
+
+
+@events.before_request
+def restrict_events_to_users():
+    if not current_user.is_authenticated:
+        return redirect(url_for("main.homepage"))
 
 
 @events.route("/<tracker_nameid>/<app_id>")

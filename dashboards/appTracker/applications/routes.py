@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import redirect, url_for, render_template, flash, request, session
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
+from flask_login import current_user
 from dashboards.appTracker.applications.forms import NewApplication, EditApplication
 from dashboards.appTracker.events.routes import deleteEvent
 from dashboards.models import Application, Tracker, Event
@@ -10,6 +11,12 @@ from datetime import datetime
 
 applications = Blueprint("applications", __name__)
 default_breadcrumb_root(applications, ".")
+
+
+@applications.before_request
+def restrict_applications_to_users():
+    if not current_user.is_authenticated:
+        return redirect(url_for("main.homepage"))
 
 
 @applications.route("/<tracker_nameid>/")

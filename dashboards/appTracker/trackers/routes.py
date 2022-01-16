@@ -1,14 +1,22 @@
 from flask import Blueprint
 from flask import redirect, url_for, render_template, flash, request, session
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
+from flask_login import current_user
 from dashboards.appTracker.trackers.forms import NewTracker, EditTracker
 from dashboards.appTracker.applications.routes import deleteApplication
 from dashboards.models import Tracker
 from dashboards.appTracker.filters.filters import to_name, to_nameid
 from dashboards import db
 
+
 trackers = Blueprint("trackers", __name__)
 default_breadcrumb_root(trackers, ".")
+
+
+@trackers.before_request
+def restrict_trackers_to_users():
+    if not current_user.is_authenticated:
+        return redirect(url_for("main.homepage"))
 
 
 @trackers.route("/")
