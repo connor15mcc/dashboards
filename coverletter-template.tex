@@ -1,0 +1,116 @@
+\documentclass[9pt]{extreport}
+
+
+
+% Setting Name, Location and Address %
+
+\newcommand{\companyname}{\VAR{coverletter.name}}
+\newcommand{\companyaddressone}{\VAR{coverletter.address1}}
+\newcommand{\companyaddresstwo}{\VAR{coverletter.address2}}
+\newcommand{\goal}{\VAR{coverletter.goal}}
+\newcommand{\whyme}{
+  \begin{itemize}
+    %% for reason in coverletter.whyme
+    \item \VAR{reason}
+    %% endfor
+  \end{itemize}
+}
+\newcommand{\whycompany}{
+  \begin{itemize}
+    %% for reason in coverletter.whycompany
+    \item \VAR{reason}
+    %% endfor
+  \end{itemize}
+}
+
+% Setting Name, Location and Address %
+
+
+\renewcommand{\baselinestretch}{1.2}
+\usepackage{setspace}
+
+\usepackage[margin = 0.5in]{geometry}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0pt}
+
+\usepackage{graphicx}
+% \graphicspath{ {./images/} }
+
+% For Changing the Font to Garamond %
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\setmainfont[ItalicFont={Times New Roman Italic}]{Garamond}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\usepackage{fix-cm}
+
+\usepackage{tabularx}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{multicol}
+\setlength{\columnsep}{-5cm}
+
+\usepackage{enumitem}
+\setlist{nolistsep,leftmargin=!}
+\renewcommand{\labelitemi}{-}
+
+\usepackage[group-separator={,}]{siunitx}
+
+\setlength\parindent{0pt}
+
+
+\begin{document}
+
+% Creating the Heading %
+\input{header-filled.tex}
+% Creating the Body %
+
+\setstretch{1.5}
+
+\today{}\\
+
+\companyname{}\\
+\companyaddressone{}\\
+\companyaddresstwo{}\\
+
+\smallskip
+
+To Whom it May Concern at \companyname{},\\
+
+My name is Connor McCarthy, and I am a current junior at Cornell studying Computer Science in the College of Engineering.
+\goal{}\\
+
+I think I'd be at good fit at \companyname{} because of my:
+\whyme{}\phantom{}
+
+I'm especially excited about this opportunity with \companyname{} because of the:
+\whycompany{}\phantom{}
+
+I am interested in building elegant solutions to complex problems, like those tackled regularly by engineers at \companyname{}.
+I have excelled in my computer science coursework and have relished the opportunity to continue my education outside of the classroom.
+I am also a strong communicator who can effectively demonstrate my views and lead others to accomplish a common goal.\\
+
+For more extensive information regarding my qualifications and experience, please reference my attached resume.\\
+
+Best,\medskip
+
+\includegraphics[height=2.25cm]{signature.png}
+
+Connor McCarthy
+
+
+\end{document}

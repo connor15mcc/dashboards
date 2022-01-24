@@ -1,6 +1,10 @@
 import yaml
 import jinja2
 import os
+import subprocess
+import tempfile
+import shutil
+
 
 DATA = "data.yaml"
 
@@ -8,9 +12,12 @@ HEADER_TEMPLATE = "header-template.tex"
 RESUME_TEMPLATE = "resume-template.tex"
 COVERLETTER_TEMPLATE = "coverletter-template.tex"
 
-HEADER_RENDERED = "header-filled.tex"
-RESUME_RENDERED = "resume-filled.tex"
-COVERLETTER_RENDERED = "coverletter-filled.tex"
+HEADER_FILLED = "header-filled.tex"
+RESUME_FILLED = "resume-filled.tex"
+COVERLETTER_FILLED = "coverletter-filled.tex"
+
+RESUME_OUTPUT = "resume.pdf"
+COVERLETTER_OUTPUT = "coverletter.pdf"
 
 
 def fill_template(data, template):
@@ -34,12 +41,49 @@ def fill_template(data, template):
     return filledTemplate.render(**r)
 
 
-if __name__ == "__main__":
-    with open(HEADER_RENDERED, "w") as f:
+def render_latex(filled_file, output_file):
+    current = os.getcwd()
+    with open(filled_file) as f:
+        contents = f.read()
+
+    temp = tempfile.mkdtemp()
+    os.chdir(temp)
+
+    print(os.getcwd())
+
+    with open(filled_file, "w") as f:
+        f.write(contents)
+
+    subprocess.call(
+        [
+            "latexmk",
+            "-interaction=nonstopmode -file-line-error -lualatex",
+            filled_file,
+        ]
+    )
+
+    pdf_filled_file = filled_file[: filled_file.rindex(".tex")] + ".pdf"
+    os.rename(pdf_filled_file, output_file)
+    shutil.copy(output_file, current)
+    shutil.rmtree(temp)
+
+
+def fill_all_templates():
+    with open(HEADER_FILLED, "w") as f:
         f.write(fill_template(DATA, HEADER_TEMPLATE))
 
-    with open(RESUME_RENDERED, "w") as f:
+    with open(RESUME_FILLED, "w") as f:
         f.write(fill_template(DATA, RESUME_TEMPLATE))
 
-    with open(COVERLETTER_RENDERED, "w") as f:
+    with open(COVERLETTER_FILLED, "w") as f:
         f.write(fill_template(DATA, COVERLETTER_TEMPLATE))
+
+
+def render_all_templates():
+    render_latex(RESUME_FILLED, RESUME_OUTPUT)
+    render_latex(COVERLETTER_FILLED, COVERLETTER_OUTPUT)
+
+
+if __name__ == "__main__":
+    fill_all_templates()
+    render_all_templates()

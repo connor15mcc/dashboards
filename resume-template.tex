@@ -25,7 +25,7 @@
 \usepackage{fix-cm}
 
 \usepackage{tabularx}
-{\renewcommand{\arraystretch}{1.5}
+\renewcommand{\arraystretch}{1.5}
 
 \usepackage{booktabs}
 \usepackage[hidelinks]{hyperref}
@@ -59,15 +59,15 @@
 \begin{document}
 
 % Creating the Heading %
-\input{header-rendered.tex}
+\input{header-filled.tex}
 
 % Creating the Body %
 
 \textbf{EDUCATION}
-\hrulefill
+\hrulefill{}
 
-\textbf{\VAR{college.institution} $\mid$ \VAR{college.degree}} \hfill \VAR{college.location}\\
-Cumulative GPA: \VAR{college.gpa} $\mid$ \VAR{college.details} \hfill \textit{\VAR{college.end_date}}
+\textbf{\VAR{college.institution} \( \mid \) \VAR{college.degree}} \hfill \VAR{college.location}\\
+Cumulative GPA:\@\VAR{college.gpa} \( \mid \) \VAR{college.details} \hfill \textit{\VAR{college.end_date}}
 
 \vspace{-0.25\baselineskip}
 \begin{tabularx}{\linewidth}{@{} l X}
@@ -88,7 +88,7 @@ Cumulative GPA: \VAR{college.gpa} $\mid$ \VAR{college.details} \hfill \textit{\V
 \hfill \textit{\VAR{highschool.start_date} \textendash{} \VAR{highschool.end_date}}\\
 
 \textbf{RELEVANT EXPERIENCE}
-\hrulefill
+\hrulefill{}
 
 %% for e in experience
 \entry{\VAR{e.company}}{\VAR{e.location}}{\VAR{e.title}}{\VAR{e.start_date} \textendash{} \VAR{e.end_date}}
@@ -107,7 +107,7 @@ Cumulative GPA: \VAR{college.gpa} $\mid$ \VAR{college.details} \hfill \textit{\V
 %% endfor
 
 \textbf{OTHER EXPERIENCE}
-\hrulefill
+\hrulefill{}
 
 
 %% for e in other_experience
@@ -127,7 +127,7 @@ Cumulative GPA: \VAR{college.gpa} $\mid$ \VAR{college.details} \hfill \textit{\V
 %% endfor
 
 \textbf{SKILLS \& INTERESTS}
-\hrulefill
+\hrulefill{}
 
 \begin{tabularx}{\linewidth}{@{} l X}
  \textbf{Skills:}   &
