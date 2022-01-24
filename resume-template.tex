@@ -1,0 +1,152 @@
+\documentclass[9pt]{extreport}
+\renewcommand{\baselinestretch}{1.2}
+
+\usepackage[margin = 0.5in]{geometry}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0pt}
+
+% \usepackage{graphicx}
+% \graphicspath{ {./images/} }
+
+% For Changing the Font to Garamond %
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\setmainfont[ItalicFont={Times New Roman Italic}]{Garamond}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\usepackage{fix-cm}
+
+\usepackage{tabularx}
+{\renewcommand{\arraystretch}{1.5}
+
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{multicol}
+\setlength{\columnsep}{-5cm}
+
+\usepackage{enumitem}
+\setlist{nolistsep,leftmargin=!}
+\renewcommand{\labelitemi}{-}
+
+\usepackage[group-separator={,}]{siunitx}
+
+\setlength\parindent{0pt}
+
+% Creating an Experience %
+\newcommand{\entry}[4]{
+  \textbf{#1} \hfill #2\\
+  \textit{#3} \hfill \textit{#4}
+}
+
+% Tech Recap %
+\newcommand{\techrecap}[1]{
+  \textbf{Implemented using:} #1
+}
+
+
+\begin{document}
+
+% Creating the Heading %
+\input{header-rendered.tex}
+
+% Creating the Body %
+
+\textbf{EDUCATION}
+\hrulefill
+
+\textbf{\VAR{college.institution} $\mid$ \VAR{college.degree}} \hfill \VAR{college.location}\\
+Cumulative GPA: \VAR{college.gpa} $\mid$ \VAR{college.details} \hfill \textit{\VAR{college.end_date}}
+
+\vspace{-0.25\baselineskip}
+\begin{tabularx}{\linewidth}{@{} l X}
+ \textbf{Relevant Coursework:} &
+ %% for c in college.courses
+ %% if not loop.last
+ \VAR{c},
+ %% else
+ \VAR{c}.                        \\
+ %% endif
+ %% endfor
+\end{tabularx}\hfill
+\newline
+\phantom{}
+
+\textbf{\VAR{highschool.institution}} \hfill \VAR{highschool.location}\\
+\VAR{highschool.details}
+\hfill \textit{\VAR{highschool.start_date} \textendash{} \VAR{highschool.end_date}}\\
+
+\textbf{RELEVANT EXPERIENCE}
+\hrulefill
+
+%% for e in experience
+\entry{\VAR{e.company}}{\VAR{e.location}}{\VAR{e.title}}{\VAR{e.start_date} \textendash{} \VAR{e.end_date}}
+\begin{itemize}
+ %% if e.highlights
+ %% for highlight in e.highlights
+ \item {\VAR{highlight}}
+       %% endfor
+       %% endif
+       %% if e.tech_recap
+ \item \techrecap{\VAR{e.tech_recap}}
+       %% endif
+\end{itemize}
+\phantom{}
+
+%% endfor
+
+\textbf{OTHER EXPERIENCE}
+\hrulefill
+
+
+%% for e in other_experience
+\entry{\VAR{e.company}}{\VAR{e.location}}{\VAR{e.title}}{\VAR{e.start_date} \textendash{} \VAR{e.end_date}}
+\begin{itemize}
+ %% if e.highlights
+ %% for highlight in e.highlights
+ \item {\VAR{highlight}}
+       %% endfor
+       %% endif
+       %% if e.tech_recap
+ \item \techrecap{\VAR{e.tech_recap}}
+       %% endif
+\end{itemize}
+\phantom{}
+
+%% endfor
+
+\textbf{SKILLS \& INTERESTS}
+\hrulefill
+
+\begin{tabularx}{\linewidth}{@{} l X}
+ \textbf{Skills:}   &
+ %% for skill in skills
+ %% if not loop.last
+ \VAR{skill},
+ %% else
+ \VAR{skill}                      \\
+ %% endif
+ %% endfor
+ \textbf{Projects:} &
+ %% for project in projects
+ %% if not loop.last
+ \VAR{project},
+ %% else
+ \VAR{project}                    \\
+ %% endif
+ %% endfor
+ \textbf{Other:}    & \VAR{other} \\
+\end{tabularx}\hfill
+
+\end{document}
