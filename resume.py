@@ -1,3 +1,4 @@
+from email import header
 import yaml
 import jinja2
 import os
@@ -18,6 +19,33 @@ COVERLETTER_FILLED = "coverletter-filled.tex"
 
 RESUME_OUTPUT = "resume.pdf"
 COVERLETTER_OUTPUT = "coverletter.pdf"
+
+LATEX_CLEAN_TYPES = [
+    ".aux",
+    ".bbl",
+    ".blg",
+    ".idx",
+    ".ind",
+    ".lof",
+    ".lot",
+    ".out",
+    ".toc",
+    ".acn",
+    ".acr",
+    ".alg",
+    ".glg",
+    ".glo",
+    ".gls",
+    ".fls",
+    ".log",
+    ".fdb_latexmk",
+    ".snm",
+    ".synctex(busy)",
+    ".synctex.gz(busy)",
+    ".nav",
+    ".synctex",
+    ".synctex.gz",
+]
 
 
 def fill_template(data, template):
@@ -42,30 +70,19 @@ def fill_template(data, template):
 
 
 def render_latex(filled_file, output_file):
-    current = os.getcwd()
-    with open(filled_file) as f:
-        contents = f.read()
-
-    temp = tempfile.mkdtemp()
-    os.chdir(temp)
-
-    print(os.getcwd())
-
-    with open(filled_file, "w") as f:
-        f.write(contents)
 
     subprocess.call(
         [
             "latexmk",
-            "-interaction=nonstopmode -file-line-error -lualatex",
+            "-interaction=nonstopmode",
+            "-lualatex",
             filled_file,
-        ]
+        ],
+        shell=False,
     )
 
     pdf_filled_file = filled_file[: filled_file.rindex(".tex")] + ".pdf"
-    os.rename(pdf_filled_file, output_file)
-    shutil.copy(output_file, current)
-    shutil.rmtree(temp)
+    os.replace(pdf_filled_file, output_file)
 
 
 def fill_all_templates():
@@ -84,6 +101,23 @@ def render_all_templates():
     render_latex(COVERLETTER_FILLED, COVERLETTER_OUTPUT)
 
 
+def clean_all_build():
+    files = [f for f in os.listdir(".") if os.path.isfile(f)]
+    for file in files:
+        if file in [HEADER_FILLED, RESUME_FILLED, COVERLETTER_FILLED]:
+            os.remove(file)
+
+
+def clean_all_aux():
+    files = [f for f in os.listdir(".") if os.path.isfile(f)]
+    for file in files:
+        extension = file[file.rindex(".") :]
+        if extension in LATEX_CLEAN_TYPES:
+            os.remove(file)
+
+
 if __name__ == "__main__":
     fill_all_templates()
     render_all_templates()
+    clean_all_build()
+    clean_all_aux()
