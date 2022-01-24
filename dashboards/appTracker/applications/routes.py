@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, send_from_directory
 from flask import redirect, url_for, render_template, flash, request, session
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import current_user
@@ -115,3 +115,13 @@ def deleteApplication(tracker_nameid, app_id):
     db.session.commit()
     flash("This application has been deleted", "success")
     return redirect(url_for("applications.oneTracker", tracker_nameid=tracker_nameid))
+
+
+@applications.route("/tracker/<tracker_nameid>/<app_id>/coverletter")
+def viewCoverLetter(tracker_nameid, app_id):
+    currentApplication = Application.query.filter_by(
+        application_id=app_id
+    ).first_or_404()
+    return send_from_directory(
+        directory="coverletters/", path="coverletter.pdf", as_attachment=True
+    )
