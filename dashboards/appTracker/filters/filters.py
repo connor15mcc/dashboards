@@ -102,8 +102,12 @@ def sortApps(apps: List[Application]) -> List[Application]:
 
 @filters.app_template_filter("hasCoverLetter")
 def hasCoverLetter(app: Application) -> bool:
-    os.chdir(os.path.dirname(__file__))
-    coverletters = [c for c in os.listdir("../../coverletters/")]
+    coverletters = [
+        c
+        for c in os.listdir(
+            os.path.join(os.path.dirname(__file__), "../../coverletters/")
+        )
+    ]
     return app.coverletter and app.coverletter in coverletters
 
 

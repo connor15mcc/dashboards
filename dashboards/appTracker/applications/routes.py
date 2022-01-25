@@ -46,14 +46,15 @@ def addNewApplication(tracker_nameid):
         correctTracker = Tracker.query.filter_by(
             name=to_name(tracker_nameid)
         ).first_or_404()
-        coverletter_file = secrets.token_hex(10) + ".pdf"
-        executor.submit(
-            createCoverLetter,
-            coverletter_file,
-            form.company_name.data,
-            form.addr1.data,
-            form.addr2.data,
-        )
+        if form.addr1.data and form.addr2.data:
+            coverletter_file = secrets.token_hex(10) + ".pdf"
+            executor.submit(
+                createCoverLetter,
+                coverletter_file,
+                form.company_name.data,
+                form.addr1.data,
+                form.addr2.data,
+            )
         application = Application(
             company_name=form.company_name.data,
             position_name=form.position_name.data,
@@ -132,8 +133,12 @@ def deleteApplication(tracker_nameid, app_id):
         application_id=app_id
     ).first_or_404()
     try:
-        os.chdir(os.path.dirname(__file__))
-        os.remove(f"../../coverletters/{currentApplication.coverletter}")
+        os.remove(
+            os.path.join(
+                os.path.dirname(__file__),
+                f"../../coverletters/{currentApplication.coverletter}",
+            )
+        )
     finally:
         for event in currentApplication.event_history:
             deleteEvent(tracker_nameid, app_id, event.event_id)
@@ -155,6 +160,9 @@ def viewCoverLetter(tracker_nameid, app_id):
             directory="coverletters/",
             path=currentApplication.coverletter,
             as_attachment=True,
+            attachment_filename=(
+                f"coverletter_{currentApplication.company_name.lower()}.pdf"
+            ),
         )
     else:
         return redirect(
@@ -168,5 +176,16 @@ def viewCoverLetter(tracker_nameid, app_id):
 
 def createCoverLetter(path, name, addr1, addr2):
     resume.update_coverletter(name, addr1, addr2)
-    os.chdir(os.path.dirname(__file__))
-    shutil.move("../../../resumes/coverletter.pdf", f"../../coverletters/{path}")
+    shutil.move(
+        os.path.join(os.path.dirname(__file__), "../../../resumes/coverletter.pdf"),
+        os.path.join(os.path.dirname(__file__), f"../../coverletters/{path}"),
+    )
+
+
+@applications.route("/tracker/<tracker_nameid>/resume")
+def viewResume(tracker_nameid):
+    return send_from_directory(
+        directory="../resumes/",
+        path="resume.pdf",
+        as_attachment=True,
+    )

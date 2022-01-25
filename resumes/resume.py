@@ -1,9 +1,9 @@
+from functools import wraps
 import yaml
 import jinja2
 import os
 import subprocess
 import shutil
-
 
 DATA = "data.yaml"
 
@@ -46,29 +46,44 @@ LATEX_CLEAN_TYPES = [
 ]
 
 
+def move_paths(func):
+    """Adjusts the paths in order to build and render Latex within
+    the proper directory"""
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        initial_directory = os.getcwd()
+        os.chdir(os.path.join(initial_directory, "resumes"))
+        result = func(*args, **kwargs)
+        os.chdir(initial_directory)
+        return result
+
+    return wrapper
+
+
 def fill_template(data, template):
     with open(data) as f:
         r = yaml.load(f, Loader=yaml.FullLoader)
 
+    dir_path = os.path.dirname(os.path.realpath(__file__))
     latex_env = jinja2.Environment(
-        block_start_string="\BLOCK{",
+        block_start_string="\BLOCK{",  # noqa: W605
         block_end_string="}",
-        variable_start_string="\VAR{",
+        variable_start_string="\VAR{",  # noqa: W605
         variable_end_string="}",
-        comment_start_string="\#{",
+        comment_start_string="\#{",  # noqa: W605
         comment_end_string="}",
         line_statement_prefix="%%",
         line_comment_prefix="%#",
         trim_blocks=True,
         autoescape=False,
-        loader=jinja2.FileSystemLoader(os.path.abspath(".")),
+        loader=jinja2.FileSystemLoader(dir_path),
     )
     filledTemplate = latex_env.get_template(template)
     return filledTemplate.render(**r)
 
 
 def render_latex(filled_file, output_file):
-
     subprocess.call(
         [
             "latexmk",
@@ -114,6 +129,7 @@ def clean_all_aux():
             os.remove(file)
 
 
+@move_paths
 def main():
     fill_all_templates()
     render_all_templates()
@@ -121,8 +137,8 @@ def main():
     clean_all_aux()
 
 
+@move_paths
 def update_coverletter(new_name, new_address1, new_address2):
-    os.chdir(os.path.dirname(__file__))
     with open(DATA) as f:
         content = yaml.safe_load(f)
 
@@ -144,6 +160,8 @@ def update_coverletter(new_name, new_address1, new_address2):
 
     with open(DATA, "w") as f:
         yaml.dump(content, f, sort_keys=False)
+
+    # os.chdir = current_dir
 
 
 if __name__ == "__main__":

@@ -6,10 +6,16 @@
             <b>Description:</b> {{tracker.desc}}
         </h5>
     </div>
-    <div class="col-3 align-self-center" align="right">
-        <a class="btn btn-success border border-dark"
-            href="{{ url_for('applications.addNewApplication', tracker_nameid = tracker.name | to_nameid ) }}">Add New
-            Application <i class="bi bi-pencil-square"></i></a>
+    <div class="align-self-center" align="right">
+        <span class="col align-self-center">
+            <a class="btn btn-secondary border border-dark"
+                href="{{ url_for('applications.viewResume', tracker_nameid = tracker.name | to_nameid ) }}"><i
+                    class="bi bi-download"></i> Resume </a></span>
+        <span class="col align-self-right">
+            <a class="btn btn-success border border-dark"
+                href="{{ url_for('applications.addNewApplication', tracker_nameid = tracker.name | to_nameid ) }}">Add
+                New
+                Application <i class="bi bi-pencil-square"></i></a></span>
     </div>
 </div>
 <br>
