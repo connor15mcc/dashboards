@@ -1,15 +1,18 @@
 from flask import Blueprint, send_from_directory
-from flask import redirect, url_for, render_template, flash, request, session
+from flask import redirect, url_for, render_template, flash, request
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import current_user
-from dashboards.appTracker.applications.forms import NewApplication, EditApplication
+from dashboards.appTracker.applications.forms import (
+    NewApplication,
+    EditApplication,
+)
 from dashboards.appTracker.events.routes import deleteEvent
 from dashboards.models import Application, Tracker, Event
 from dashboards.appTracker.filters.filters import to_name, hasCoverLetter
 from dashboards import db, executor
 from datetime import datetime
 import secrets
-import resumes.resume
+from resumes import resume
 import shutil
 import os
 
@@ -128,15 +131,18 @@ def deleteApplication(tracker_nameid, app_id):
     currentApplication = Application.query.filter_by(
         application_id=app_id
     ).first_or_404()
-    for event in currentApplication.event_history:
-        deleteEvent(tracker_nameid, app_id, event.event_id)
-    session["_flashes"].clear()
-    db.session.delete(currentApplication)
-    db.session.commit()
-    os.chdir(os.path.dirname(__file__))
-    os.remove(f"../../coverletters/{currentApplication.coverletter}")
-    flash("This application has been deleted", "success")
-    return redirect(url_for("applications.oneTracker", tracker_nameid=tracker_nameid))
+    try:
+        os.chdir(os.path.dirname(__file__))
+        os.remove(f"../../coverletters/{currentApplication.coverletter}")
+    finally:
+        for event in currentApplication.event_history:
+            deleteEvent(tracker_nameid, app_id, event.event_id)
+        db.session.delete(currentApplication)
+        db.session.commit()
+        flash("This application has been deleted", "success")
+        return redirect(
+            url_for("applications.oneTracker", tracker_nameid=tracker_nameid)
+        )
 
 
 @applications.route("/tracker/<tracker_nameid>/<app_id>/coverletter")
@@ -161,6 +167,6 @@ def viewCoverLetter(tracker_nameid, app_id):
 
 
 def createCoverLetter(path, name, addr1, addr2):
-    resumes.resume.update_coverletter(name, addr1, addr2)
+    resume.update_coverletter(name, addr1, addr2)
     os.chdir(os.path.dirname(__file__))
     shutil.move("../../../resumes/coverletter.pdf", f"../../coverletters/{path}")

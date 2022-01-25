@@ -5,8 +5,6 @@ import subprocess
 import shutil
 
 
-os.chdir(os.path.dirname(__file__))
-
 DATA = "data.yaml"
 
 HEADER_TEMPLATE = "header-template.tex"
