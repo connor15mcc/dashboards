@@ -18,6 +18,8 @@ class NewApplication(FlaskForm):
         ],
     )
     link = URLField("URL", validators=[])
+    addr1 = StringField("Street Address", validators=[])
+    addr2 = StringField("City Address", validators=[])
 
     submit = SubmitField("Add Application")
 
@@ -35,6 +37,8 @@ class EditApplication(FlaskForm):
         ],
     )
     link = URLField("URL", validators=[])
+    addr1 = StringField("Street Address", validators=[])
+    addr2 = StringField("City Address", validators=[])
     status = SelectField(
         "Status",
         choices=[

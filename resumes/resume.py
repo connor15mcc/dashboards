@@ -2,7 +2,10 @@ import yaml
 import jinja2
 import os
 import subprocess
+import shutil
 
+
+os.chdir(os.path.dirname(__file__))
 
 DATA = "data.yaml"
 
@@ -79,7 +82,7 @@ def render_latex(filled_file, output_file):
     )
 
     pdf_filled_file = filled_file[: filled_file.rindex(".tex")] + ".pdf"
-    os.replace(pdf_filled_file, output_file)
+    shutil.move(pdf_filled_file, output_file)
 
 
 def fill_all_templates():
@@ -108,7 +111,7 @@ def clean_all_build():
 def clean_all_aux():
     files = [f for f in os.listdir(".") if os.path.isfile(f)]
     for file in files:
-        extension = file[file.rindex(".") :]
+        extension = file[file.rindex(".") :]  # noqa: E203
         if extension in LATEX_CLEAN_TYPES:
             os.remove(file)
 
@@ -121,6 +124,7 @@ def main():
 
 
 def update_coverletter(new_name, new_address1, new_address2):
+    os.chdir(os.path.dirname(__file__))
     with open(DATA) as f:
         content = yaml.safe_load(f)
 

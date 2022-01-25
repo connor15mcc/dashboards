@@ -2,6 +2,7 @@ from dashboards.models import Tracker, Application, Event
 from flask import Blueprint
 from datetime import datetime
 from typing import List
+import os
 
 filters = Blueprint("filters", __name__)
 
@@ -97,6 +98,13 @@ def filterAppsOther(apps: List[Application]) -> List[Application]:
 def sortApps(apps: List[Application]) -> List[Application]:
     result = sorted(apps, key=lambda a: -daysSinceUpdate(a))
     return result
+
+
+@filters.app_template_filter("hasCoverLetter")
+def hasCoverLetter(app: Application) -> bool:
+    os.chdir(os.path.dirname(__file__))
+    coverletters = [c for c in os.listdir("../../coverletters/")]
+    return app.coverletter and app.coverletter in coverletters
 
 
 @filters.app_template_filter("totalAwaitingAction")
