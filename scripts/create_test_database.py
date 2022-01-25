@@ -1,5 +1,5 @@
-from dashboards import db, create_app
-from dashboards.models import Tracker, Application, Event
+from dashboards import db, create_app, bcrypt
+from dashboards.models import Tracker, Application, Event, User
 from datetime import datetime
 
 
@@ -73,7 +73,7 @@ tracker2 = Tracker(
                     desc="rejected",
                     from_me=False,
                     action_necessary=False,
-                    date=datetime(2020, 10, 4),
+                    date=datetime(2021, 10, 4),
                     of_application="1",
                 )
             ],
@@ -82,6 +82,8 @@ tracker2 = Tracker(
     ],
 )
 
+hashed_password = bcrypt.generate_password_hash("password").decode("utf-8")
+testUser = User(email="test@gmail.com", password=hashed_password)
 
 app = create_app(True)
 with app.app_context():
@@ -89,4 +91,9 @@ with app.app_context():
     db.create_all()
     db.session.add(tracker1)
     db.session.add(tracker2)
+    db.session.commit()
+
+    User.__table__.drop(db.engine)
+    User.__table__.create(db.engine)
+    db.session.add(testUser)
     db.session.commit()

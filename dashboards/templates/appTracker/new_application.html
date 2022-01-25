@@ -71,6 +71,38 @@
                 {{form.link(class="form-control form-control-lg")}}
                 {% endif %}
             </div>
+            <div class="form-group">
+                {{form.addr1.label(class="form-control-label")}}
+
+                {% if form.addr1.errors %}
+                {{ form.addr1(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.addr1.errors %}
+                    <span>
+                        {{ error }}
+                    </span>
+                    {% endfor%}
+                </div>
+                {% else %}
+                {{form.addr1(class="form-control form-control-lg")}}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{form.addr2.label(class="form-control-label")}}
+
+                {% if form.addr2.errors %}
+                {{ form.addr2(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.addr2.errors %}
+                    <span>
+                        {{ error }}
+                    </span>
+                    {% endfor%}
+                </div>
+                {% else %}
+                {{form.addr2(class="form-control form-control-lg")}}
+                {% endif %}
+            </div>
         </fieldset>
         <div class="form-group">
             {{form.submit(class="btn btn-outline-info border border-dark")}}

@@ -76,7 +76,6 @@ def deleteTracker(tracker_nameid):
     ).first_or_404()
     for application in currentTracker.applications:
         deleteApplication(tracker_nameid, application.application_id)
-    session["_flashes"].clear()
     db.session.delete(currentTracker)
     db.session.commit()
     flash("This tracker has been deleted", "success")

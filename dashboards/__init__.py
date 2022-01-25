@@ -4,6 +4,7 @@ from flask_breadcrumbs import Breadcrumbs
 from flask_scss import Scss
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from flask_executor import Executor
 from dashboards.config import Config, ConfigTest
 
 
@@ -12,6 +13,7 @@ login_manager = LoginManager()
 login_manager.login_view = "manageAcct.login"
 login_manager.login_message_category = "info"
 bcrypt = Bcrypt()
+executor = Executor()
 
 
 def create_app(testing):
@@ -24,6 +26,7 @@ def create_app(testing):
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+    executor.init_app(app)
     Breadcrumbs(app)
     app.debug = testing
     Scss(app)

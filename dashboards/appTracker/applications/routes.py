@@ -1,13 +1,20 @@
-from flask import Blueprint
-from flask import redirect, url_for, render_template, flash, request, session
+from flask import Blueprint, send_from_directory
+from flask import redirect, url_for, render_template, flash, request
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import current_user
-from dashboards.appTracker.applications.forms import NewApplication, EditApplication
+from dashboards.appTracker.applications.forms import (
+    NewApplication,
+    EditApplication,
+)
 from dashboards.appTracker.events.routes import deleteEvent
 from dashboards.models import Application, Tracker, Event
-from dashboards.appTracker.filters.filters import to_name
-from dashboards import db
+from dashboards.appTracker.filters.filters import to_name, hasCoverLetter
+from dashboards import db, executor
 from datetime import datetime
+import secrets
+from resumes import resume
+import shutil
+import os
 
 applications = Blueprint("applications", __name__)
 default_breadcrumb_root(applications, ".appTracker.tracker")
@@ -39,12 +46,22 @@ def addNewApplication(tracker_nameid):
         correctTracker = Tracker.query.filter_by(
             name=to_name(tracker_nameid)
         ).first_or_404()
+        if form.addr1.data and form.addr2.data:
+            coverletter_file = secrets.token_hex(10) + ".pdf"
+            executor.submit(
+                createCoverLetter,
+                coverletter_file,
+                form.company_name.data,
+                form.addr1.data,
+                form.addr2.data,
+            )
         application = Application(
             company_name=form.company_name.data,
             position_name=form.position_name.data,
             source=form.source.data,
             link=form.link.data,
             status="Initialized",
+            coverletter=coverletter_file,
             of_tracker=correctTracker.tracker_id,
         )
         db.session.add(application)
@@ -77,6 +94,13 @@ def editApplication(tracker_nameid, app_id):
     ).first_or_404()
     form = EditApplication()
     if form.validate_on_submit():
+        executor.submit(
+            createCoverLetter,
+            currentApplication.coverletter,
+            form.company_name.data,
+            form.addr1.data,
+            form.addr2.data,
+        )
         currentApplication.company_name = form.company_name.data
         currentApplication.position_name = form.position_name.data
         currentApplication.source = form.source.data
@@ -108,10 +132,60 @@ def deleteApplication(tracker_nameid, app_id):
     currentApplication = Application.query.filter_by(
         application_id=app_id
     ).first_or_404()
-    for event in currentApplication.event_history:
-        deleteEvent(tracker_nameid, app_id, event.event_id)
-    session["_flashes"].clear()
-    db.session.delete(currentApplication)
-    db.session.commit()
-    flash("This application has been deleted", "success")
-    return redirect(url_for("applications.oneTracker", tracker_nameid=tracker_nameid))
+    try:
+        os.remove(
+            os.path.join(
+                os.path.dirname(__file__),
+                f"../../coverletters/{currentApplication.coverletter}",
+            )
+        )
+    finally:
+        for event in currentApplication.event_history:
+            deleteEvent(tracker_nameid, app_id, event.event_id)
+        db.session.delete(currentApplication)
+        db.session.commit()
+        flash("This application has been deleted", "success")
+        return redirect(
+            url_for("applications.oneTracker", tracker_nameid=tracker_nameid)
+        )
+
+
+@applications.route("/tracker/<tracker_nameid>/<app_id>/coverletter")
+def viewCoverLetter(tracker_nameid, app_id):
+    currentApplication = Application.query.filter_by(
+        application_id=app_id
+    ).first_or_404()
+    if hasCoverLetter(currentApplication):
+        return send_from_directory(
+            directory="coverletters/",
+            path=currentApplication.coverletter,
+            as_attachment=True,
+            attachment_filename=(
+                f"coverletter_{currentApplication.company_name.lower()}.pdf"
+            ),
+        )
+    else:
+        return redirect(
+            url_for(
+                "applications.editApplication",
+                tracker_nameid=tracker_nameid,
+                app_id=app_id,
+            )
+        )
+
+
+def createCoverLetter(path, name, addr1, addr2):
+    resume.update_coverletter(name, addr1, addr2)
+    shutil.move(
+        os.path.join(os.path.dirname(__file__), "../../../resumes/coverletter.pdf"),
+        os.path.join(os.path.dirname(__file__), f"../../coverletters/{path}"),
+    )
+
+
+@applications.route("/tracker/<tracker_nameid>/resume")
+def viewResume(tracker_nameid):
+    return send_from_directory(
+        directory="../resumes/",
+        path="resume.pdf",
+        as_attachment=True,
+    )

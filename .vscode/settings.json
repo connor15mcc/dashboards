@@ -1,0 +1,10 @@
+{
+    "latex-workshop.latex.autoBuild.run": "never",
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "python.pythonPath": "c:\\Users\\Connor\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+    "python.analysis.extraPaths": [
+        "./dashboards"
+    ],
+    "python.formatting.provider": "black"
+}

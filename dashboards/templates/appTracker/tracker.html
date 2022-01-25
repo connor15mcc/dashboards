@@ -6,10 +6,16 @@
             <b>Description:</b> {{tracker.desc}}
         </h5>
     </div>
-    <div class="col-3 align-self-center" align="right">
-        <a class="btn btn-success border border-dark"
-            href="{{ url_for('applications.addNewApplication', tracker_nameid = tracker.name | to_nameid ) }}">Add New
-            Application <i class="bi bi-pencil-square"></i></a>
+    <div class="align-self-center" align="right">
+        <span class="col align-self-center">
+            <a class="btn btn-secondary border border-dark"
+                href="{{ url_for('applications.viewResume', tracker_nameid = tracker.name | to_nameid ) }}"><i
+                    class="bi bi-download"></i> Resume </a></span>
+        <span class="col align-self-right">
+            <a class="btn btn-success border border-dark"
+                href="{{ url_for('applications.addNewApplication', tracker_nameid = tracker.name | to_nameid ) }}">Add
+                New
+                Application <i class="bi bi-pencil-square"></i></a></span>
     </div>
 </div>
 <br>
@@ -37,6 +43,11 @@
                 <td>{{app.status}}</td>
                 <td>{{app | timeSinceUpdate | formattimedelta }}</td>
                 <td align="right">
+                    {% if app | hasCoverLetter %}
+                    <a class="btn btn-secondary btn-sm px-3 mx-1 border border-dark"
+                        href="{{url_for('applications.viewCoverLetter', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
+                            class="bi bi-download"></i> Cover Letter</a>
+                    {% endif %}
                     <a class="btn btn-success btn-sm px-3 mx-1 border border-dark"
                         href="{{url_for('events.addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
                             class="bi bi-plus-lg"></i> Add History</a>
@@ -66,6 +77,11 @@
                 <td>{{app.status}}</td>
                 <td>{{app | timeSinceUpdate | formattimedelta }}</td>
                 <td align="right">
+                    {% if app | hasCoverLetter %}
+                    <a class="btn btn-secondary btn-sm px-3 mx-1 border border-dark"
+                        href="{{url_for('applications.viewCoverLetter', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
+                            class="bi bi-download"></i> Cover Letter</a>
+                    {% endif %}
                     <a class="btn btn-success btn-sm px-3 mx-1 border border-dark"
                         href="{{url_for('events.addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
                             class="bi bi-plus-lg"></i> Add History</a>
@@ -95,6 +111,11 @@
                 <td>{{app.status}}</td>
                 <td>{{app | timeSinceUpdate | formattimedelta }}</td>
                 <td align="right">
+                    {% if app | hasCoverLetter %}
+                    <a class="btn btn-secondary btn-sm px-3 mx-1 border border-dark"
+                        href="{{url_for('applications.viewCoverLetter', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
+                            class="bi bi-download"></i> Cover Letter</a>
+                    {% endif %}
                     <a class="btn btn-success btn-sm px-3 mx-1 border border-dark"
                         href="{{url_for('events.addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
                             class="bi bi-plus-lg"></i> Add History</a>
