@@ -6,7 +6,7 @@ from dashboards.appTracker.trackers.forms import NewTracker, EditTracker
 from dashboards.appTracker.applications.routes import deleteApplication
 from dashboards.models import Tracker
 from dashboards.appTracker.filters.filters import to_name, to_nameid
-from dashboards import db
+from dashboards import db, login_manager
 
 
 trackers = Blueprint("trackers", __name__)
@@ -16,7 +16,7 @@ default_breadcrumb_root(trackers, ".appTracker")
 @trackers.before_request
 def restrict_trackers_to_users():
     if not current_user.is_authenticated:
-        return redirect(url_for("main.homepage"))
+        return redirect(url_for(login_manager.login_view))
 
 
 @trackers.route("/")

@@ -6,7 +6,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_executor import Executor
 from flask_migrate import Migrate
-from dashboards.config import Config, ConfigTest
+from dashboards.config import Config
 
 
 db = SQLAlchemy()
@@ -20,10 +20,7 @@ migrate = Migrate()
 
 def create_app(testing):
     app = Flask(__name__)
-    if testing:
-        app.config.from_object(ConfigTest)
-    else:
-        app.config.from_object(Config)
+    app.config.from_object(Config)
 
     db.init_app(app)
     bcrypt.init_app(app)

@@ -6,7 +6,7 @@ from dashboards.appTracker.events.forms import NewEvent, EditEvent
 from dashboards.appTracker.events.utils import updateStatus
 from dashboards.models import Application, Event
 from dashboards.appTracker.filters.filters import format_datetime
-from dashboards import db
+from dashboards import db, login_manager
 
 
 events = Blueprint("events", __name__)
@@ -16,7 +16,7 @@ default_breadcrumb_root(events, ".appTracker.tracker.application")
 @events.before_request
 def restrict_events_to_users():
     if not current_user.is_authenticated:
-        return redirect(url_for("main.homepage"))
+        return redirect(url_for(login_manager.login_view))
 
 
 @events.route("/<tracker_nameid>/<app_id>")

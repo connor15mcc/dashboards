@@ -9,7 +9,7 @@ from dashboards.appTracker.applications.forms import (
 from dashboards.appTracker.events.routes import deleteEvent
 from dashboards.models import Application, Tracker, Event
 from dashboards.appTracker.filters.filters import to_name, hasCoverLetter
-from dashboards import db, executor
+from dashboards import db, executor, login_manager
 from datetime import datetime
 import secrets
 from resumes import render
@@ -23,7 +23,7 @@ default_breadcrumb_root(applications, ".appTracker.tracker")
 @applications.before_request
 def restrict_applications_to_users():
     if not current_user.is_authenticated:
-        return redirect(url_for("main.homepage"))
+        return redirect(url_for(login_manager.login_view))
 
 
 @applications.route("/<tracker_nameid>/")
