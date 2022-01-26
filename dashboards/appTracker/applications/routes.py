@@ -55,6 +55,8 @@ def addNewApplication(tracker_nameid):
                 form.addr1.data,
                 form.addr2.data,
             )
+        else:
+            coverletter_file = None
         application = Application(
             company_name=form.company_name.data,
             position_name=form.position_name.data,

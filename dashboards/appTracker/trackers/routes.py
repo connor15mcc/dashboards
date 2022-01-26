@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import redirect, url_for, render_template, flash, request, session
+from flask import redirect, url_for, render_template, flash, request
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import current_user
 from dashboards.appTracker.trackers.forms import NewTracker, EditTracker

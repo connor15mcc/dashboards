@@ -1,10 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
 
-{{ display_widget("Application Tracker", url_for('trackers.allTrackers') ) }}
+<div class="container application-grid">
+    {{ display_widget("Application Tracker", "Track all of your job applications!", url_for('trackers.allTrackers') ) }}
+</div>
 
 {% endblock content %}
 
-{% macro display_widget(name, link) %}
-<h2><a href="{{ link }}"">View {{ name }}!</a></h2>
+{% macro display_widget(name, desc, link) %}
+<div class="card">
+    <h3 class="card-header">{{ name }}</h3>
+    <div class="card-body">
+        <p class="card-text">{{ desc }}</p>
+        <div>
+            <a href="{{ link }}" class="btn btn-success px-5 stretched-link">Go!</a>
+        </div>
+    </div>
+</div>
 {% endmacro %}

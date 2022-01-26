@@ -26,7 +26,7 @@
         </thead>
         <tbody>
             {% for tracker in trackers %}
-            <tr>
+            <tr style="position: relative;">
                 <td>{{ tracker.name }}</td>
                 <td>
                     <div style="max-width: 400px; overflow: auto;">{{ tracker.desc }}</div>
@@ -35,13 +35,14 @@
                 <td>{{ tracker | totalApplications }}</td>
                 <td align="right">
                     <div style="min-width: 375px;">
-                        <a class="btn btn-primary btn-sm px-5 mx-2 border border-dark"
+                        <a class="btn btn-primary btn-sm px-5 mx-2 border border-dark stretched-link"
                             href="{{ tracker.name | to_nameid }}">
                             View Applications </a>
                         <a class="btn btn-warning btn-sm px-4 mx-2 border border-dark"
+                            style="position: relative; z-index: 2;"
                             href="{{ url_for('trackers.editTracker', tracker_nameid = (tracker.name | to_nameid) ) }}">
                             <i class="bi bi-pencil-fill"></i></a>
-                        <a class="btn btn-danger btn-sm mx-2 border border-dark"
+                        <a class="btn btn-danger btn-sm mx-2 border border-dark" style="position: relative; z-index: 2;"
                             href="{{ url_for('trackers.deleteTracker', tracker_nameid = (tracker.name | to_nameid) ) }}">
                             <i class="bi bi-trash"></i></a>
                     </div>

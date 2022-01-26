@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_breadcrumbs import Breadcrumbs
-from flask_scss import Scss
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_executor import Executor
@@ -29,7 +28,6 @@ def create_app(testing):
     migrate.init_app(app, db)
     Breadcrumbs(app)
     app.debug = testing
-    Scss(app)
 
     # Importing Blueprints #
     from dashboards.main.routes import main  # noqa: E402

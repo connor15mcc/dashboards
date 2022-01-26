@@ -1,10 +1,23 @@
+
+
 .table-hover tbody tr.bg-warning:hover td {
-  background-color: #f57f17; }
+  background-color: rgb(245,127,23);
+}
 
-  .table-hover tbody tr.bg-danger:hover td {
-    background-color: #b71c1c; }
 
-    .tracker-category-label {
-      text-align: center;
-      pointer-events: none;
-      line-height: 200%; }
+.table-hover tbody tr.bg-danger:hover td {
+  background-color: rgb(183,28,28);
+}
+
+
+.tracker-category-label {
+  text-align: center;
+  pointer-events: none;
+  line-height: 200%;
+}
+
+.application-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1.5em;
+}

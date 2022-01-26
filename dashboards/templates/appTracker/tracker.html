@@ -14,8 +14,9 @@
         <span class="col align-self-right">
             <a class="btn btn-success border border-dark"
                 href="{{ url_for('applications.addNewApplication', tracker_nameid = tracker.name | to_nameid ) }}">Add
-                New
-                Application <i class="bi bi-pencil-square"></i></a></span>
+                New Application <i class="bi bi-pencil-square"></i>
+            </a>
+        </span>
     </div>
 </div>
 <br>
@@ -34,104 +35,53 @@
             <tr class="tracker-category-label bg-primary text-light">
                 <th colspan="5">Action Required:</th>
             </tr>
-            {% for app in tracker.applications | sortApps | filterAppsNeedAction %}
-            <tr class="{{app | daysSinceUpdate | toBootstrapColor}}">
-                <td>{{ app.company_name }}</td>
-                <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
-                    {% else %} {{app.position_name}}
-                    {% endif %}</td>
-                <td>{{app.status}}</td>
-                <td>{{app | timeSinceUpdate | formattimedelta }}</td>
-                <td align="right">
-                    {% if app | hasCoverLetter %}
-                    <a class="btn btn-secondary btn-sm px-3 mx-1 border border-dark"
-                        href="{{url_for('applications.viewCoverLetter', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
-                            class="bi bi-download"></i> Cover Letter</a>
-                    {% endif %}
-                    <a class="btn btn-success btn-sm px-3 mx-1 border border-dark"
-                        href="{{url_for('events.addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
-                            class="bi bi-plus-lg"></i> Add History</a>
-                    <a class="btn btn-primary btn-sm px-4 mx-1 border border-dark"
-                        href="{{url_for('events.oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
-                        History</a>
-                    <a class="btn btn-warning btn-sm px-4 mx-1 border border-dark"
-                        href="{{url_for('applications.editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
-                        <i class="bi bi-pencil-fill"></i> </a>
-                    <a class="btn btn-danger btn-sm mx-1 border border-dark"
-                        href="{{url_for('applications.deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
-                        <i class="bi bi-trash"></i> </a>
-                </td>
-            </tr>
-            {% endfor %}
+            {{ display_applications(tracker.applications | sortApps | filterAppsNeedAction) }}
         </tbody>
         <tbody>
             <tr class="tracker-category-label bg-primary text-light">
                 <th colspan="5">No Action Required:</th>
             </tr>
-            {% for app in tracker.applications | sortApps | filterAppsStillValid %}
-            <tr">
-                <td>{{ app.company_name }}</td>
-                <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
-                    {% else %} {{app.position_name}}
-                    {% endif %}</td>
-                <td>{{app.status}}</td>
-                <td>{{app | timeSinceUpdate | formattimedelta }}</td>
-                <td align="right">
-                    {% if app | hasCoverLetter %}
-                    <a class="btn btn-secondary btn-sm px-3 mx-1 border border-dark"
-                        href="{{url_for('applications.viewCoverLetter', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
-                            class="bi bi-download"></i> Cover Letter</a>
-                    {% endif %}
-                    <a class="btn btn-success btn-sm px-3 mx-1 border border-dark"
-                        href="{{url_for('events.addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
-                            class="bi bi-plus-lg"></i> Add History</a>
-                    <a class="btn btn-primary btn-sm px-4 mx-1 border border-dark"
-                        href="{{url_for('events.oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
-                        History</a>
-                    <a class="btn btn-warning btn-sm px-4 mx-1 border border-dark"
-                        href="{{url_for('applications.editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
-                        <i class="bi bi-pencil-fill"></i> </a>
-                    <a class="btn btn-danger btn-sm mx-1 border border-dark"
-                        href="{{url_for('applications.deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
-                        <i class="bi bi-trash"></i> </a>
-                </td>
-                </tr>
-                {% endfor %}
+            {{ display_applications(tracker.applications | sortApps | filterAppsStillValid) }}
         </tbody>
         <tbody>
             <tr class="tracker-category-label bg-primary text-light">
                 <th colspan="5">No Longer in Consideration:</th>
             </tr>
-            {% for app in tracker.applications | sortApps | filterAppsOther %}
-            <tr">
-                <td>{{ app.company_name }}</td>
-                <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
-                    {% else %} {{app.position_name}}
-                    {% endif %}</td>
-                <td>{{app.status}}</td>
-                <td>{{app | timeSinceUpdate | formattimedelta }}</td>
-                <td align="right">
-                    {% if app | hasCoverLetter %}
-                    <a class="btn btn-secondary btn-sm px-3 mx-1 border border-dark"
-                        href="{{url_for('applications.viewCoverLetter', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
-                            class="bi bi-download"></i> Cover Letter</a>
-                    {% endif %}
-                    <a class="btn btn-success btn-sm px-3 mx-1 border border-dark"
-                        href="{{url_for('events.addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
-                            class="bi bi-plus-lg"></i> Add History</a>
-                    <a class="btn btn-primary btn-sm px-4 mx-1 border border-dark"
-                        href="{{url_for('events.oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
-                        History</a>
-                    <a class="btn btn-warning btn-sm px-4 mx-1 border border-dark"
-                        href="{{url_for('applications.editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
-                        <i class="bi bi-pencil-fill"></i> </a>
-                    <a class="btn btn-danger btn-sm mx-1 border border-dark"
-                        href="{{url_for('applications.deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
-                        <i class="bi bi-trash"></i> </a>
-                </td>
-                </tr>
-                {% endfor %}
+            {{ display_applications(tracker.applications | sortApps | filterAppsOther) }}
         </tbody>
     </table>
 </div>
 {% endblock content %}
+
+
+{% macro display_applications(applications) %}
+{% for app in applications %}
+<tr style="position: relative;">
+    <td>{{ app.company_name }}</td>
+    <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
+        {% else %} {{app.position_name}}
+        {% endif %}</td>
+    <td>{{app.status}}</td>
+    <td>{{app | timeSinceUpdate | formattimedelta }}</td>
+    <td align="right">
+        {% if app | hasCoverLetter %}
+        <a class="btn btn-secondary btn-sm px-3 mx-1 border border-dark" style="position: relative; z-index: 2;"
+            href="{{url_for('applications.viewCoverLetter', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
+                class="bi bi-download"></i> Cover Letter</a>
+        {% endif %}
+        <a class="btn btn-success btn-sm px-3 mx-1 border border-dark" style="position: relative; z-index: 2;"
+            href="{{url_for('events.addNewEvent', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}"><i
+                class="bi bi-plus-lg"></i> Add History</a>
+        <a class="btn btn-primary btn-sm px-4 mx-1 border border-dark stretched-link"
+            href="{{url_for('events.oneApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">View
+            History</a>
+        <a class="btn btn-warning btn-sm px-4 mx-1 border border-dark" style="position: relative; z-index: 2;"
+            href="{{url_for('applications.editApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
+            <i class="bi bi-pencil-fill"></i> </a>
+        <a class="btn btn-danger btn-sm mx-1 border border-dark" style="position: relative; z-index: 2;"
+            href="{{url_for('applications.deleteApplication', tracker_nameid = tracker.name | to_nameid, app_id = app.application_id) }}">
+            <i class="bi bi-trash"></i> </a>
+    </td>
+</tr>
+{% endfor %}
+{% endmacro %}
