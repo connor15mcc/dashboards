@@ -12,7 +12,7 @@ from dashboards.appTracker.filters.filters import to_name, hasCoverLetter
 from dashboards import db, executor
 from datetime import datetime
 import secrets
-from resumes import resume
+from resumes import render
 import shutil
 import os
 
@@ -62,6 +62,8 @@ def addNewApplication(tracker_nameid):
             link=form.link.data,
             status="Initialized",
             coverletter=coverletter_file,
+            addr1=form.addr1.data,
+            addr2=form.addr2.data,
             of_tracker=correctTracker.tracker_id,
         )
         db.session.add(application)
@@ -94,6 +96,7 @@ def editApplication(tracker_nameid, app_id):
     ).first_or_404()
     form = EditApplication()
     if form.validate_on_submit():
+        deleteCoverLetter(currentApplication)
         executor.submit(
             createCoverLetter,
             currentApplication.coverletter,
@@ -106,6 +109,8 @@ def editApplication(tracker_nameid, app_id):
         currentApplication.source = form.source.data
         currentApplication.link = form.link.data
         currentApplication.status = form.status.data
+        currentApplication.addr1 = form.addr1.data
+        currentApplication.addr2 = form.addr2.data
         db.session.commit()
         flash(
             f"Application for {currentApplication.company_name} has been updated!",
@@ -120,6 +125,8 @@ def editApplication(tracker_nameid, app_id):
         form.source.data = currentApplication.source
         form.link.data = currentApplication.link
         form.status.data = currentApplication.status
+        form.addr1.data = currentApplication.addr1
+        form.addr2.data = currentApplication.addr2
     return render_template(
         "appTracker/edit_application.html",
         title="Application Tracker - " + "Edit Application",
@@ -132,22 +139,13 @@ def deleteApplication(tracker_nameid, app_id):
     currentApplication = Application.query.filter_by(
         application_id=app_id
     ).first_or_404()
-    try:
-        os.remove(
-            os.path.join(
-                os.path.dirname(__file__),
-                f"../../coverletters/{currentApplication.coverletter}",
-            )
-        )
-    finally:
-        for event in currentApplication.event_history:
-            deleteEvent(tracker_nameid, app_id, event.event_id)
-        db.session.delete(currentApplication)
-        db.session.commit()
-        flash("This application has been deleted", "success")
-        return redirect(
-            url_for("applications.oneTracker", tracker_nameid=tracker_nameid)
-        )
+    deleteCoverLetter(currentApplication)
+    for event in currentApplication.event_history:
+        deleteEvent(tracker_nameid, app_id, event.event_id)
+    db.session.delete(currentApplication)
+    db.session.commit()
+    flash("This application has been deleted", "success")
+    return redirect(url_for("applications.oneTracker", tracker_nameid=tracker_nameid))
 
 
 @applications.route("/tracker/<tracker_nameid>/<app_id>/coverletter")
@@ -175,11 +173,23 @@ def viewCoverLetter(tracker_nameid, app_id):
 
 
 def createCoverLetter(path, name, addr1, addr2):
-    resume.update_coverletter(name, addr1, addr2)
+    render.update_coverletter(name, addr1, addr2)
     shutil.move(
         os.path.join(os.path.dirname(__file__), "../../../resumes/coverletter.pdf"),
         os.path.join(os.path.dirname(__file__), f"../../coverletters/{path}"),
     )
+
+
+def deleteCoverLetter(app):
+    try:
+        os.remove(
+            os.path.join(
+                os.path.dirname(__file__),
+                f"../../coverletters/{app.coverletter}",
+            )
+        )
+    finally:
+        return
 
 
 @applications.route("/tracker/<tracker_nameid>/resume")

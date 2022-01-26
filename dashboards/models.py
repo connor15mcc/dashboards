@@ -39,6 +39,8 @@ class Application(db.Model):
     link = db.Column(db.String, nullable=False)
     status = db.Column(db.String, nullable=False)
     coverletter = db.Column(db.String)
+    addr1 = db.Column(db.String)
+    addr2 = db.Column(db.String)
     of_tracker = db.Column(
         db.String, db.ForeignKey("tracker.tracker_id"), nullable=False
     )

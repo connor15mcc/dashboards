@@ -21,6 +21,8 @@ Following my recruitment for Summer '22 during the Fall of 2021 (my junior year)
 ### Tips
 - You should create a `.env` file with `SECRET_KEY=your_key_here`
 - Passing any arguments to `launch.py` will launch the program in debug mode
+- You can utilize flask-migrate through `py -m flask db...`
+  - When using Windows Powershell, you must set the environment variable with the following syntax: `$env:FLASK_APP = "launch"`
 
 ## Resumes
 

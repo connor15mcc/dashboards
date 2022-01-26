@@ -5,6 +5,7 @@ from flask_scss import Scss
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_executor import Executor
+from flask_migrate import Migrate
 from dashboards.config import Config, ConfigTest
 
 
@@ -14,6 +15,7 @@ login_manager.login_view = "manageAcct.login"
 login_manager.login_message_category = "info"
 bcrypt = Bcrypt()
 executor = Executor()
+migrate = Migrate()
 
 
 def create_app(testing):
@@ -27,6 +29,7 @@ def create_app(testing):
     bcrypt.init_app(app)
     login_manager.init_app(app)
     executor.init_app(app)
+    migrate.init_app(app, db)
     Breadcrumbs(app)
     app.debug = testing
     Scss(app)
