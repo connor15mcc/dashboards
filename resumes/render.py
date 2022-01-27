@@ -53,7 +53,7 @@ def move_paths(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         initial_directory = os.getcwd()
-        os.chdir(os.path.join(initial_directory, "resumes"))
+        os.chdir(os.path.join(os.path.abspath(__file__), ".."))
         result = func(*args, **kwargs)
         os.chdir(initial_directory)
         return result
@@ -160,8 +160,6 @@ def update_coverletter(new_name, new_address1, new_address2):
 
     with open(DATA, "w") as f:
         yaml.dump(content, f, sort_keys=False)
-
-    # os.chdir = current_dir
 
 
 if __name__ == "__main__":
