@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+<div>
+    <form method="POST" action="">
+        {{form.hidden_tag()}}
+        <fieldset class="form-group">
+            <legend class=>Edit the notes:</legend>
+            <div class="form-group">
+
+                {% if form.notes.errors %}
+                {{ form.notes(class="form-control form-control-lg is-invalid", autofocus="autofocus",
+                onfocus="this.select()")}}
+                <div class="invalid-feedback">
+                    {% for error in form.notes.errors %}
+                    <span>
+                        {{ error }}
+                    </span>
+                    {% endfor%}
+                </div>
+                {% else %}
+                {{form.notes(class="form-control form-control-lg", autofocus="autofocus",
+                onfocus="this.select()")}}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{form.submit(class="btn btn-outline-info border border-dark")}}
+        </div>
+    </form>
+
+
+</div>
+{% endblock content %}

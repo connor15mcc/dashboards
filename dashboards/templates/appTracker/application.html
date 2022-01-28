@@ -16,6 +16,24 @@
             New Event <i class="bi bi-pencil-square"></i></a>
     </div>
 </div>
+<div class="row">
+    <div class="col">
+        <h5>
+            <a
+                href="{{ url_for('applications.editNotes', tracker_nameid = application.of_tracker | to_nameid_from_trackerid , app_id = application.application_id) }}">
+                <b>Notes:</b>
+            </a>
+            {% if application.notes %}
+            {{ application.notes }}
+            {% endif %}
+        </h5>
+    </div>
+    <div class="col-3 align-self-center" align="right">
+        <a class="btn btn-warning btn-sm px-4 mx-2 border border-dark" style="position: relative; z-index: 2;"
+            href="{{ url_for('applications.editNotes', tracker_nameid = application.of_tracker | to_nameid_from_trackerid , app_id = application.application_id) }}">
+            Edit Notes <i class="bi bi-pencil-fill"></i></a>
+    </div>
+</div>
 <br>
 <div style="overflow-x:auto;">
     <table id="data" class="table table-sm table-hover">

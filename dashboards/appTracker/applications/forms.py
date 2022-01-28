@@ -50,3 +50,9 @@ class EditApplication(FlaskForm):
     )
 
     submit = SubmitField("Apply Changes")
+
+
+class EditNotes(FlaskForm):
+    notes = StringField("Notes", validators=[DataRequired()])
+
+    submit = SubmitField("Edit Notes")
