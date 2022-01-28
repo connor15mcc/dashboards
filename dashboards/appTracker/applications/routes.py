@@ -46,17 +46,14 @@ def addNewApplication(tracker_nameid):
         correctTracker = Tracker.query.filter_by(
             name=to_name(tracker_nameid)
         ).first_or_404()
-        if form.addr1.data and form.addr2.data:
-            coverletter_file = secrets.token_hex(10) + ".pdf"
-            executor.submit(
-                createCoverLetter,
-                coverletter_file,
-                form.company_name.data,
-                form.addr1.data,
-                form.addr2.data,
-            )
-        else:
-            coverletter_file = None
+        coverletter_file = secrets.token_hex(10) + ".pdf"
+        executor.submit(
+            createCoverLetter,
+            coverletter_file,
+            form.company_name.data,
+            form.addr1.data,
+            form.addr2.data,
+        )
         application = Application(
             company_name=form.company_name.data,
             position_name=form.position_name.data,
@@ -99,9 +96,10 @@ def editApplication(tracker_nameid, app_id):
     form = EditApplication()
     if form.validate_on_submit():
         deleteCoverLetter(currentApplication)
+        coverletter_file = secrets.token_hex(10) + ".pdf"
         executor.submit(
             createCoverLetter,
-            currentApplication.coverletter,
+            coverletter_file,
             form.company_name.data,
             form.addr1.data,
             form.addr2.data,
@@ -111,6 +109,7 @@ def editApplication(tracker_nameid, app_id):
         currentApplication.source = form.source.data
         currentApplication.link = form.link.data
         currentApplication.status = form.status.data
+        currentApplication.coverletter = coverletter_file
         currentApplication.addr1 = form.addr1.data
         currentApplication.addr2 = form.addr2.data
         db.session.commit()
@@ -174,8 +173,11 @@ def viewCoverLetter(tracker_nameid, app_id):
         )
 
 
-def createCoverLetter(path, name, addr1, addr2):
-    render.update_coverletter(name, addr1, addr2)
+def createCoverLetter(path, name, addr1=None, addr2=None):
+    if addr1 and addr2:
+        render.update_coverletter(name, addr1, addr2)
+    else:
+        render.no_address_coverletter(name)
     shutil.move(
         os.path.join(os.path.dirname(__file__), "../../../resumes/coverletter.pdf"),
         os.path.join(os.path.dirname(__file__), f"../../coverletters/{path}"),

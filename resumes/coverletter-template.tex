@@ -5,8 +5,10 @@
 % Setting Name, Location and Address %
 
 \newcommand{\companyname}{\VAR{coverletter.name}}
+%% if coverletter.address1 and coverletter.address2
 \newcommand{\companyaddressone}{\VAR{coverletter.address1}}
 \newcommand{\companyaddresstwo}{\VAR{coverletter.address2}}
+%% endif
 \newcommand{\goal}{\VAR{coverletter.goal}}
 \newcommand{\whyme}{
   \begin{itemize}
@@ -83,9 +85,11 @@
 
 \today{}\\
 
+%% if coverletter.address1 and coverletter.address2
 \companyname{}\\
 \companyaddressone{}\\
 \companyaddresstwo{}\\
+%% endif
 
 \smallskip
 

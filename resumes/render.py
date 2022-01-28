@@ -86,13 +86,20 @@ def fill_template(data, template):
 def render_latex(filled_file, output_file):
     subprocess.call(
         [
-            "latexmk",
-            "-interaction=nonstopmode",
-            "-lualatex",
+            "xelatex",
             filled_file,
         ],
         shell=False,
     )
+    # subprocess.call(
+    #     [
+    #         "latexmk",
+    #         "-interaction=nonstopmode",
+    #         "-lualatex",
+    #         filled_file,
+    #     ],
+    #     shell=False,
+    # )
 
     pdf_filled_file = filled_file[: filled_file.rindex(".tex")] + ".pdf"
     shutil.move(pdf_filled_file, output_file)
@@ -145,6 +152,31 @@ def update_coverletter(new_name, new_address1, new_address2):
     content["coverletter"]["name"] = new_name
     content["coverletter"]["address1"] = new_address1
     content["coverletter"]["address2"] = new_address2
+
+    with open(DATA, "w") as f:
+        yaml.dump(content, f, sort_keys=False)
+
+    fill_all_templates()
+    render_latex(COVERLETTER_FILLED, COVERLETTER_OUTPUT)
+    clean_all_build()
+    clean_all_aux()
+
+    content["coverletter"]["name"] = "Company"
+    content["coverletter"]["address1"] = "123 Constitution Lane"
+    content["coverletter"]["address2"] = "New York, NY 12345"
+
+    with open(DATA, "w") as f:
+        yaml.dump(content, f, sort_keys=False)
+
+
+@move_paths
+def no_address_coverletter(new_name):
+    with open(DATA) as f:
+        content = yaml.safe_load(f)
+
+    content["coverletter"]["name"] = new_name
+    content["coverletter"].pop("address1", None)
+    content["coverletter"].pop("address2", None)
 
     with open(DATA, "w") as f:
         yaml.dump(content, f, sort_keys=False)
