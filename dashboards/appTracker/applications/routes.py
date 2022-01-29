@@ -48,13 +48,6 @@ def addNewApplication(tracker_nameid):
             name=to_name(tracker_nameid)
         ).first_or_404()
         coverletter_file = secrets.token_hex(10) + ".pdf"
-        executor.submit(
-            createCoverLetter,
-            coverletter_file,
-            form.company_name.data,
-            form.addr1.data,
-            form.addr2.data,
-        )
         application = Application(
             company_name=form.company_name.data,
             position_name=form.position_name.data,
@@ -66,6 +59,7 @@ def addNewApplication(tracker_nameid):
             addr2=form.addr2.data,
             of_tracker=correctTracker.tracker_id,
         )
+        executor.submit(createCoverLetter, coverletter_file, application)
         db.session.add(application)
         db.session.commit()
         firstHistory = Event(
@@ -98,13 +92,7 @@ def editApplication(tracker_nameid, app_id):
     if form.validate_on_submit():
         deleteCoverLetter(currentApplication)
         coverletter_file = secrets.token_hex(10) + ".pdf"
-        executor.submit(
-            createCoverLetter,
-            coverletter_file,
-            form.company_name.data,
-            form.addr1.data,
-            form.addr2.data,
-        )
+        executor.submit(createCoverLetter, coverletter_file, currentApplication)
         currentApplication.company_name = form.company_name.data
         currentApplication.position_name = form.position_name.data
         currentApplication.source = form.source.data
@@ -204,11 +192,8 @@ def viewCoverLetter(tracker_nameid, app_id):
         )
 
 
-def createCoverLetter(path, name, addr1=None, addr2=None):
-    if addr1 and addr2:
-        render.update_coverletter(name, addr1, addr2)
-    else:
-        render.no_address_coverletter(name)
+def createCoverLetter(path, app: Application):
+    render.update_coverletter(app)
     shutil.move(
         os.path.join(os.path.dirname(__file__), "../../../resumes/coverletter.pdf"),
         os.path.join(os.path.dirname(__file__), f"../../coverletters/{path}"),
