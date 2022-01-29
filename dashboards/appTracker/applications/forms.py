@@ -13,6 +13,7 @@ class NewApplication(FlaskForm):
         choices=[
             ("LinkedIn", "LinkedIn"),
             ("Handshake", "Handshake"),
+            ("Company Website", "Company Website"),
             ("Indeed", "Indeed"),
             ("Other", "Other"),
         ],
@@ -32,6 +33,7 @@ class EditApplication(FlaskForm):
         choices=[
             ("LinkedIn", "LinkedIn"),
             ("Handshake", "Handshake"),
+            ("Company Website", "Company Website"),
             ("Indeed", "Indeed"),
             ("Other", "Other"),
         ],
