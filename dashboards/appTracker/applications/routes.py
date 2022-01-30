@@ -59,7 +59,6 @@ def addNewApplication(tracker_nameid):
             addr2=form.addr2.data,
             of_tracker=correctTracker.tracker_id,
         )
-        executor.submit(createCoverLetter, coverletter_file, application)
         db.session.add(application)
         db.session.commit()
         firstHistory = Event(
@@ -71,6 +70,7 @@ def addNewApplication(tracker_nameid):
         )
         db.session.add(firstHistory)
         db.session.commit()
+        executor.submit(createCoverLetter, coverletter_file, application)
         flash(f"New Application added for {form.company_name.data}!", "success")
         return redirect(
             url_for("applications.oneTracker", tracker_nameid=tracker_nameid)
@@ -92,7 +92,6 @@ def editApplication(tracker_nameid, app_id):
     if form.validate_on_submit():
         deleteCoverLetter(currentApplication)
         coverletter_file = secrets.token_hex(10) + ".pdf"
-        executor.submit(createCoverLetter, coverletter_file, currentApplication)
         currentApplication.company_name = form.company_name.data
         currentApplication.position_name = form.position_name.data
         currentApplication.source = form.source.data
@@ -102,6 +101,7 @@ def editApplication(tracker_nameid, app_id):
         currentApplication.addr1 = form.addr1.data
         currentApplication.addr2 = form.addr2.data
         db.session.commit()
+        executor.submit(createCoverLetter, coverletter_file, currentApplication)
         flash(
             f"Application for {currentApplication.company_name} has been updated!",
             "success",

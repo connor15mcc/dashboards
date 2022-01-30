@@ -53,7 +53,7 @@ class Application(db.Model):
     def __repr__(self):
         return (
             f"Application('{self.application_id}', '{self.company_name}', "
-            f"'{self.position_name}'"
+            f"'{self.position_name}')"
         )
 
 
