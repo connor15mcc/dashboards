@@ -11,6 +11,10 @@
             <a class="btn btn-secondary border border-dark"
                 href="{{ url_for('applications.viewResume', tracker_nameid = tracker.name | to_nameid ) }}"><i
                     class="bi bi-download"></i> Resume </a></span>
+        <span class="col align-self-center">
+            <a class="btn btn-warning border border-dark"
+                href="{{ url_for('applications.reloadCoverLetters', tracker_nameid = tracker.name | to_nameid ) }}"><i
+                    class="bi bi-arrow-repeat"></i> Reload Cover Letters </a></span>
         <span class="col align-self-right">
             <a class="btn btn-success border border-dark"
                 href="{{ url_for('applications.addNewApplication', tracker_nameid = tracker.name | to_nameid ) }}">Add

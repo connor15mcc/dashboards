@@ -219,3 +219,18 @@ def viewResume(tracker_nameid):
         path="resume.pdf",
         as_attachment=True,
     )
+
+
+@applications.route("/<tracker_nameid>/reloadCoverLetters")
+def reloadCoverLetters(tracker_nameid):
+    executor.submit(reloadAllCoverLetters, tracker_nameid)
+
+    return redirect(url_for("applications.oneTracker", tracker_nameid=tracker_nameid))
+
+
+def reloadAllCoverLetters(tracker_nameid):
+    trackerName = to_name(tracker_nameid)
+    currentTracker = Tracker.query.filter_by(name=trackerName).first_or_404()
+    for app in currentTracker.applications:
+        deleteCoverLetter(app)
+        createCoverLetter(app.coverletter, app)
