@@ -62,7 +62,7 @@
 {% for app in applications %}
 <tr style="position: relative;">
     <td>{{ app.company_name }}</td>
-    <td>{%if app.link %} <a href="{{app.link}}">{{app.position_name}}</a>
+    <td>{%if app.link %} <a style="position: relative; z-index: 2;" href="{{app.link}}">{{app.position_name}}</a>
         {% else %} {{app.position_name}}
         {% endif %}</td>
     <td>{{app.status}}</td>
