@@ -426,6 +426,11 @@ TSWLatexianTemp*
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
 
+
+### Personal Files
 ## Coverletter
-coverletter.pdf
 dashboards/coverletters/*
+*coverletter.pdf
+*resume.pdf
+*signature.png
+*data.yaml
