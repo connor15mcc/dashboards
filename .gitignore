@@ -430,7 +430,7 @@ TSWLatexianTemp*
 ### Personal Files
 ## Coverletter
 dashboards/coverletters/*
-*coverletter.pdf
-*resume.pdf
-*signature.png
-*data.yaml
+**/coverletter.pdf
+**/resume.pdf
+**/signature.png
+**/data.yaml
